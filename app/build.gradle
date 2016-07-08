@@ -12,6 +12,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -26,5 +29,10 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
+
+    compile 'com.jjoe64:graphview:4.1.0'
+
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
+
     testCompile 'junit:junit:4.12'
 }
