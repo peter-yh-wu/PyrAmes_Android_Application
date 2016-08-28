@@ -145,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //
+    // For generating test data
+    //
+    //
+    //
+    //
     @Override
     protected void onResume() {
         super.onResume();
