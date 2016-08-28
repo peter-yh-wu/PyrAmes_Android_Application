@@ -8,19 +8,156 @@
     tools:context="com.example.peterwu.pyrames_android_application.MainActivity">
 
     <TextView
+        android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+        android:text=""
+        tools:layout_editor_absoluteX="75dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv2"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:gravity="left"
+        android:layout_height="67dp"
+        android:layout_width="387dp"
+        android:maxLines="4"
+        android:lines="4"
+        android:text="Checking for local bluetooth devices..."
         app:layout_constraintTop_toTopOf="@+id/activity_main"
         app:layout_constraintRight_toRightOf="@+id/activity_main"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_main" />
+        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintVertical_bias="0.98" />
+        />
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph1"
+        android:layout_width="500dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toTopOf="@+id/activity_main"
+        app:layout_constraintRight_toRightOf="@+id/activity_main" />
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph"
+        android:layout_width="500dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@+id/graph1"
+        app:layout_constraintRight_toRightOf="@+id/activity_main" />|
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph2"
+        android:layout_width="500dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@+id/graph"
+        app:layout_constraintRight_toRightOf="@+id/graph" />|
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph3"
+        android:layout_width="500dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@+id/graph2"
+        app:layout_constraintRight_toRightOf="@+id/activity_main" />|
+
+    <View
+        android:id="@+id/pd1"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:background="#b9f1c1"
+        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+        app:layout_constraintRight_toRightOf="@+id/tv2"
+        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Higher"
+        app:layout_constraintTop_toTopOf="@+id/graph1"
+        app:layout_constraintRight_toLeftOf="@+id/graph1" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Lower"
+        app:layout_constraintTop_toBottomOf="@+id/button1"
+        android:layout_marginTop="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/graph1" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Higher"
+        app:layout_constraintTop_toTopOf="@+id/graph"
+        app:layout_constraintRight_toLeftOf="@+id/graph" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Lower"
+        app:layout_constraintTop_toBottomOf="@+id/button3"
+        android:layout_marginTop="16dp"
+        app:layout_constraintRight_toRightOf="@+id/button3" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Higher"
+        app:layout_constraintTop_toTopOf="@+id/graph2"
+        app:layout_constraintRight_toLeftOf="@+id/graph2" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Lower"
+        app:layout_constraintTop_toBottomOf="@+id/button5"
+        android:layout_marginTop="16dp"
+        app:layout_constraintRight_toRightOf="@+id/button5" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Higher"
+        app:layout_constraintTop_toTopOf="@+id/graph3"
+        app:layout_constraintRight_toLeftOf="@+id/graph3" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Lower"
+        app:layout_constraintTop_toBottomOf="@+id/button7"
+        android:layout_marginTop="16dp"
+        app:layout_constraintRight_toRightOf="@+id/button7" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        app:relativeBegin="0dp" />
+
+    <!--
 
     <com.jjoe64.graphview.helper.GraphViewXML
-        android:layout_width="match_parent"
-        android:layout_height="200dip"
+        android:id="@+id/gv1"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
         app:seriesData="0=5;2=5;3=0;4=2"
         app:seriesType="line"
-        app:seriesColor="#ee0000" />
+        app:seriesColor="#ee0000"
+        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+        app:layout_constraintTop_toTopOf="@+id/activity_main" />
+
+    -->
 
 </android.support.constraint.ConstraintLayout>
