@@ -97,31 +97,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        pd = (plotDynamic) findViewById(R.id.pd1);
-
-        pd.addData(1);
-        pd.addData(2);
-        pd.addData(1);
-        pd.addData(3);
-
-        //pd.onDraw(c);
-        */
-
-        //previous test graphview
-        //
-        /*
-        GraphView graph2 = (GraphView) findViewById(R.id.gv1);
-        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
-        graph2.addSeries(series2);
-        */
-
         //bluetooth
         //
         bluetooth  = BluetoothAdapter.getDefaultAdapter();
