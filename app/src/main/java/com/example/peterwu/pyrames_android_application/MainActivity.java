@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
     private  LineGraphSeries<DataPoint> series1;
 
+    //Viewport variables
+    int maxY2 = 50;
+    int minY2 = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,18 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println("Entered onCreate");
 
-        //get graphview instance
-        GraphView graph = (GraphView) findViewById(R.id.graph);
-        //data
-        series = new LineGraphSeries<DataPoint>();
-        graph.addSeries(series);
-        //customize viewport
-        Viewport viewport = graph.getViewport();
-        viewport.setYAxisBoundsManual(true);
-        viewport.setMinY(0);
-        viewport.setMaxY(10);
-        viewport.setScrollable(true);
-
+        //Graphs
         //graphview 1
         GraphView graph1 = (GraphView) findViewById(R.id.graph1);
         //data
@@ -58,42 +51,51 @@ public class MainActivity extends AppCompatActivity {
         viewport1.setYAxisBoundsManual(true);
         viewport1.setMinY(-5);
         viewport1.setMaxY(5);
-        viewport.setScrollable(true);
+        viewport1.setScrollable(true);
 
-        //Button
+        //get graphview instance
+        GraphView graph2 = (GraphView) findViewById(R.id.graph2);
+        //data
+        series = new LineGraphSeries<DataPoint>();
+        graph2.addSeries(series);
+        //customize viewport
+        final Viewport viewport2 = graph2.getViewport();
+        viewport2.setYAxisBoundsManual(true);
+        viewport2.setMinY(minY2);
+        viewport2.setMaxY(maxY2);
+        viewport2.setScrollable(true);
+        viewport2.setScalable(true);
+
+        //Buttons
         //
-        final Button button = (Button) findViewById(R.id.button1);
-        button.setOnClickListener(new View.OnClickListener() {
+        //
+        final Button button1 = (Button) findViewById(R.id.button1);
+        button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 System.out.println("Button Pressed");
             }
         });
 
-        /*
-        pd = (plotDynamic) findViewById(R.id.pd1);
 
-        pd.addData(1);
-        pd.addData(2);
-        pd.addData(1);
-        pd.addData(3);
-
-        //pd.onDraw(c);
-        */
-
-        //previous test graphview
-        //
-        /*
-        GraphView graph2 = (GraphView) findViewById(R.id.gv1);
-        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
+        final Button button3 = (Button) findViewById(R.id.button3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                maxY2 += 1;
+                minY2 += 1;
+                viewport2.setMaxY(maxY2);
+                viewport2.setMinY(minY2);
+            }
         });
-        graph2.addSeries(series2);
-        */
+        final Button button4 = (Button) findViewById(R.id.button4);
+        button4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                maxY2 -= 1;
+                minY2 -= 1;
+                viewport2.setMaxY(maxY2);
+                viewport2.setMinY(minY2);
+            }
+        });
 
         //bluetooth
         //
@@ -143,6 +145,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //
+    // For generating test data
+    //
+    //
+    //
+    //
     @Override
     protected void onResume() {
         super.onResume();
