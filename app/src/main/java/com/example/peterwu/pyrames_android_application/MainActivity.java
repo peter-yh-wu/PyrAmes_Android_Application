@@ -1,12 +1,20 @@
 package com.example.peterwu.pyrames_android_application;
 
 import android.bluetooth.BluetoothAdapter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
@@ -27,17 +35,36 @@ public class MainActivity extends AppCompatActivity {
     private LineGraphSeries<DataPoint> series;
     private int lastX = 0;
 
-    private  LineGraphSeries<DataPoint> series1;
+    private LineGraphSeries<DataPoint> series1;
 
     //Viewport variables
     int maxY2 = 50;
     int minY2 = 0;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Firebase.setAndroidContext(this);
+        Firebase rootRef = new Firebase("https://pyrames-ca318.firebaseio.com/");
+        //Firebase testRef = rootRef.child("testInteger");
+        int tester = 22;
+        rootRef.setValue(tester);
+
+        String test = FirebaseDatabase.getSdkVersion();
+        System.out.println(test);
+
+        //FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //DatabaseReference myRef = database.getReference("pyrames-ca318");
+
+        //myRef.setValue("Hello, World!");
         System.out.println("Entered onCreate");
 
         //Graphs
@@ -99,21 +126,18 @@ public class MainActivity extends AppCompatActivity {
 
         //bluetooth
         //
-        bluetooth  = BluetoothAdapter.getDefaultAdapter();
+        bluetooth = BluetoothAdapter.getDefaultAdapter();
 
         TextView textView1 = (TextView) findViewById(R.id.tv1);
 
-        if(bluetooth != null)
-        {
+        if (bluetooth != null) {
             //System.out.println("bluetooth isn't null");
             textView1.setText("bluetooth isn't null");
 
             String status;
             if (bluetooth.isEnabled()) {
                 // Enabled. Work with Bluetooth.
-            }
-            else
-            {
+            } else {
                 // Disabled. Do something else
                 //status = "Bluetooth is not Enabled.";
                 bluetooth.enable();
@@ -143,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
             */
 
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     //
@@ -159,8 +186,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //we add 100 new entries
-                for(int i = 0; i<100; i++)
-                {
+                for (int i = 0; i < 100; i++) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -183,8 +209,43 @@ public class MainActivity extends AppCompatActivity {
     //add random data to graph
     private void addEntry() {
         //display max 10 point on viewport and scroll to end
-        series.appendData(new DataPoint(lastX++, RANDOM.nextDouble() * 10d),true,10);
+        series.appendData(new DataPoint(lastX++, RANDOM.nextDouble() * 10d), true, 10);
     }
 
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
 }
