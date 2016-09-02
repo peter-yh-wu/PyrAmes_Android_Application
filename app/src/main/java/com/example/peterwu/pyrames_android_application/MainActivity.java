@@ -1,10 +1,12 @@
 package com.example.peterwu.pyrames_android_application;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,7 +22,9 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 
 //import com.jjoe64.graphview_demos.MainActivity;
 //import com.jjoe64.graphview_demos.R;
@@ -147,24 +151,32 @@ public class MainActivity extends AppCompatActivity {
             status = mydevicename + " : " + mydeviceaddress;
             textView1.setText(status);
 
-            /*
-            private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-                public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
-
-                    if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-                        //discovery starts, we can show progress dialog or perform other tasks
-                    } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                        //discovery finishes, dismis progress dialog
-                    } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                        //bluetooth device found
-                        BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-                        textView1.setText("Found device " + device.getName());
-                    }
+            //
+            // get paired devices
+            //
+            //
+            //
+            ArrayList<String> al1 = new ArrayList<String>();
+            //ArrayAdapter<String> mArrayAdapter = new ArrayAdapter<String>();
+            Set<BluetoothDevice> pairedDevices = bluetooth.getBondedDevices();
+            // If there are paired devices
+            if (pairedDevices.size() > 0) {
+                System.out.println("Paired with a device");
+                // Loop through paired devices
+                for (BluetoothDevice device : pairedDevices) {
+                    // Add the name and address to an array adapter to show in a ListView
+                    //mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                    al1.add(device.getName());
+                    System.out.println(device.getName());
                 }
-            };
-            */
+            }
+            else {
+                System.out.println("Not paired with a device");
+            }
+
+
+
+
 
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
