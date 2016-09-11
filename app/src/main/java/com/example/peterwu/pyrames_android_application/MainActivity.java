@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         int tester = 22;
         rootRef.setValue(tester);
 
-        String test = FirebaseDatabase.getSdkVersion();
-        System.out.println(test);
+        //String test = FirebaseDatabase.getSdkVersion();
+        //System.out.println(test);
 
         //FirebaseDatabase database = FirebaseDatabase.getInstance();
         //DatabaseReference myRef = database.getReference("pyrames-ca318");
