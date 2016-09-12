@@ -2,6 +2,7 @@ package com.example.peterwu.pyrames_android_application;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -59,14 +60,14 @@ public class MainActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         Firebase rootRef = new Firebase("https://pyrames-ca318.firebaseio.com/");
         //Firebase testRef = rootRef.child("testInteger");
-        //int tester = 22;
-        ArrayList<Integer> tester = new ArrayList<Integer>();
-        tester.add(22);
-        tester.add(25);
+        int tester = 25;
+        //ArrayList<Integer> tester = new ArrayList<Integer>();
+        //tester.add(22);
+        //tester.add(25);
         rootRef.setValue(tester);
 
-        //String test = FirebaseDatabase.getSdkVersion();
-        //System.out.println(test);
+        String test = FirebaseDatabase.getSdkVersion();
+        System.out.println(test);
 
         //FirebaseDatabase database = FirebaseDatabase.getInstance();
         //DatabaseReference myRef = database.getReference("pyrames-ca318");
@@ -74,8 +75,26 @@ public class MainActivity extends AppCompatActivity {
         //myRef.setValue("Hello, World!");
         System.out.println("Entered onCreate");
 
-        //Graphs
+        //
+        // pop-up window
+        //
+        //
+        //
+        Button buttonPopUp = (Button) findViewById(R.id.buttonPopUp);
+
+        buttonPopUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,Pop.class));
+            }
+        });
+
+        //
+        // Graphs
+        //
         //graphview 1
+        //
+        //
         GraphView graph1 = (GraphView) findViewById(R.id.graph1);
         //data
         series1 = new LineGraphSeries<DataPoint>();

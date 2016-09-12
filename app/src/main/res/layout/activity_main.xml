@@ -12,24 +12,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+        app:layout_constraintLeft_toLeftOf="@id/activity_main"
+        app:layout_constraintBottom_toBottomOf="@id/activity_main"
         tools:layout_editor_absoluteX="75dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv2"
-        android:layout_marginBottom="24dp" />
+        tools:layout_editor_absoluteY="0dp" />
 
-    <TextView
-        android:id="@+id/tv2"
-        android:gravity="left"
-        android:layout_height="67dp"
-        android:layout_width="387dp"
-        android:maxLines="4"
-        android:lines="4"
-        android:text="Checking for local bluetooth devices..."
-        app:layout_constraintTop_toTopOf="@+id/activity_main"
-        app:layout_constraintRight_toRightOf="@+id/activity_main"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintVertical_bias="0.98" />
-        />
+    <Button
+        android:id="@+id/buttonPopUp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Find Device"
+        app:layout_constraintBottom_toBottomOf="@id/activity_main"
+        app:layout_constraintRight_toRightOf="@id/activity_main"
+        android:layout_marginTop="8dp" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph1"
@@ -58,16 +53,6 @@
         android:layout_height="200dp"
         app:layout_constraintTop_toBottomOf="@+id/graph3"
         app:layout_constraintRight_toRightOf="@+id/activity_main" />|
-
-    <View
-        android:id="@+id/pd1"
-        android:layout_width="wrap_content"
-        android:layout_height="14dp"
-        android:background="#b9f1c1"
-        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
-        app:layout_constraintRight_toRightOf="@+id/tv2"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
-        app:layout_constraintHorizontal_bias="0.0" />
 
     <Button
         android:id="@+id/button1"
