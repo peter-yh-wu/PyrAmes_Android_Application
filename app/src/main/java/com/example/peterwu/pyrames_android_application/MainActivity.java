@@ -59,11 +59,17 @@ public class MainActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         Firebase rootRef = new Firebase("https://pyrames-ca318.firebaseio.com/");
         //Firebase testRef = rootRef.child("testInteger");
-        //int tester = 22;
-        ArrayList<Integer> tester = new ArrayList<Integer>();
-        tester.add(22);
-        tester.add(25);
-        rootRef.setValue(tester);
+        int tester = 22;
+        //ArrayList<Integer> tester = new ArrayList<Integer>();
+        //tester.add(22);
+        //tester.add(25);
+        //rootRef.setValue(tester);
+        
+        
+        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        mRootRef.setValue(tester);
+        
+   
 
         //String test = FirebaseDatabase.getSdkVersion();
         //System.out.println(test);

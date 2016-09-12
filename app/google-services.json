@@ -36,6 +36,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158185104751:android:1717dbd7c10f883a",
+        "android_client_info": {
+          "package_name": "com.example.peterwu.pyrames_android_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "158185104751-s61n7149lmuj8eme37lpsgat0ef3fbrn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj-YjGR3iAmY8v7rwS2dG9J-sMJH8iWvQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
