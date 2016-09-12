@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         
         DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
         mRootRef.setValue(tester);
-        
+        //hello
    
 
         //String test = FirebaseDatabase.getSdkVersion();
