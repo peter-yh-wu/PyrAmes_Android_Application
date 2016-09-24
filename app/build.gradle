@@ -41,10 +41,12 @@ dependencies {
     compile 'com.eclipsesource.minimal-json:minimal-json:0.9.4'
     compile 'com.firebase:firebase-client-android:2.3.1'
     //compile 'com.google.firebase:firebase-database:9.4.0'
-    compile 'com.google.firebase:firebase-server-sdk:3.0.1'
+
+
+    //compile 'com.google.firebase:firebase-server-sdk:3.0.1'
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-database:9.4.0'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.4.0'
 }
 //test
 apply plugin: 'com.google.gms.google-services'
