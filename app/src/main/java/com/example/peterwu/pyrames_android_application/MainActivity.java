@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 //import com.jjoe64.graphview_demos.MainActivity;
 //import com.jjoe64.graphview_demos.R;
@@ -51,15 +52,31 @@ public class MainActivity extends AppCompatActivity {
 
     plotDynamic pd;
 
+    //DELETE
     private static final Random RANDOM = new Random();
-    private LineGraphSeries<DataPoint> series;
     private int lastX = 0;
 
     private LineGraphSeries<DataPoint> series1;
+    private LineGraphSeries<DataPoint> series2;
+    private LineGraphSeries<DataPoint> series3;
+    private LineGraphSeries<DataPoint> series4;
 
     //Viewport variables
-    int maxY2 = 50;
-    int minY2 = 0;
+    int minX = 0;
+    int maxX = 20;
+
+    int minY1 = 8500;
+    int maxY1 = 9000;
+
+    int minY2 = 9000;
+    int maxY2 = 9500;
+
+    int minY3 = 11500;
+    int maxY3 = 12000;
+
+    int minY4 = 10500;
+    int maxY4 = 11500;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -72,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
     //File file = new File("C:/file.txt");
 
     String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/data";
+
+    String bigString = "";
+    int bigStringIndex = 0;
+
+    int dataArr[][] = new int[4][50000];
+    int dataArrIndex = 0;
+
+    int graphIndex = 0;
+
+    int yIncrement = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,17 +180,21 @@ public class MainActivity extends AppCompatActivity {
         series1 = new LineGraphSeries<DataPoint>();
         graph1.addSeries(series1);
         //customize viewport
-        Viewport viewport1 = graph1.getViewport();
+        final Viewport viewport1 = graph1.getViewport();
         viewport1.setYAxisBoundsManual(true);
-        viewport1.setMinY(-5);
-        viewport1.setMaxY(5);
+        viewport1.setMinY(minY1);
+        viewport1.setMaxY(maxY1);
         viewport1.setScrollable(true);
+
+        viewport1.setXAxisBoundsManual(true);
+        viewport1.setMinX(minX);
+        viewport1.setMaxX(maxX);
 
         //get graphview instance
         GraphView graph2 = (GraphView) findViewById(R.id.graph2);
         //data
-        series = new LineGraphSeries<DataPoint>();
-        graph2.addSeries(series);
+        series2 = new LineGraphSeries<DataPoint>();
+        graph2.addSeries(series2);
         //customize viewport
         final Viewport viewport2 = graph2.getViewport();
         viewport2.setYAxisBoundsManual(true);
@@ -172,23 +203,72 @@ public class MainActivity extends AppCompatActivity {
         viewport2.setScrollable(true);
         viewport2.setScalable(true);
 
+        viewport2.setXAxisBoundsManual(true);
+        viewport2.setMinX(minX);
+        viewport2.setMaxX(maxX);
+
+        //get graphview instance
+        GraphView graph3 = (GraphView) findViewById(R.id.graph3);
+        //data
+        series3 = new LineGraphSeries<DataPoint>();
+        graph3.addSeries(series3);
+        //customize viewport
+        final Viewport viewport3 = graph3.getViewport();
+        viewport3.setYAxisBoundsManual(true);
+        viewport3.setMinY(minY3);
+        viewport3.setMaxY(maxY3);
+        viewport3.setScrollable(true);
+        viewport3.setScalable(true);
+
+        viewport3.setXAxisBoundsManual(true);
+        viewport3.setMinX(minX);
+        viewport3.setMaxX(maxX);
+
+        //get graphview instance
+        GraphView graph4 = (GraphView) findViewById(R.id.graph4);
+        //data
+        series4 = new LineGraphSeries<DataPoint>();
+        graph4.addSeries(series4);
+        //customize viewport
+        final Viewport viewport4 = graph4.getViewport();
+        viewport4.setYAxisBoundsManual(true);
+        viewport4.setMinY(minY4);
+        viewport4.setMaxY(maxY4);
+        viewport4.setScrollable(true);
+        viewport4.setScalable(true);
+
+        viewport4.setXAxisBoundsManual(true);
+        viewport4.setMinX(minX);
+        viewport4.setMaxX(maxX);
+
         //Buttons
         //
         //
         final Button button1 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
-                System.out.println("Button Pressed");
+                minY1 += yIncrement;
+                maxY1 += yIncrement;
+                viewport1.setMaxY(maxY1);
+                viewport1.setMinY(minY1);
             }
         });
 
+        final Button button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                minY1 -= yIncrement;
+                maxY1 -= yIncrement;
+                viewport1.setMaxY(maxY1);
+                viewport1.setMinY(minY1);
+            }
+        });
 
         final Button button3 = (Button) findViewById(R.id.button3);
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                maxY2 += 1;
-                minY2 += 1;
+                minY2 += yIncrement;
+                maxY2 += yIncrement;
                 viewport2.setMaxY(maxY2);
                 viewport2.setMinY(minY2);
             }
@@ -196,10 +276,48 @@ public class MainActivity extends AppCompatActivity {
         final Button button4 = (Button) findViewById(R.id.button4);
         button4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                maxY2 -= 1;
-                minY2 -= 1;
+                minY2 -= yIncrement;
+                maxY2 -= yIncrement;
                 viewport2.setMaxY(maxY2);
                 viewport2.setMinY(minY2);
+            }
+        });
+
+        final Button button5 = (Button) findViewById(R.id.button5);
+        button5.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                minY3 += yIncrement;
+                maxY3 += yIncrement;
+                viewport3.setMaxY(maxY3);
+                viewport3.setMinY(minY3);
+            }
+        });
+        final Button button6 = (Button) findViewById(R.id.button6);
+        button6.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                minY3 -= yIncrement;
+                maxY3 -= yIncrement;
+                viewport3.setMaxY(maxY3);
+                viewport3.setMinY(minY3);
+            }
+        });
+
+        final Button button7 = (Button) findViewById(R.id.button7);
+        button7.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                minY4 += yIncrement;
+                maxY4 += yIncrement;
+                viewport4.setMaxY(maxY4);
+                viewport4.setMinY(minY4);
+            }
+        });
+        final Button button8 = (Button) findViewById(R.id.button8);
+        button8.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                minY4 -= yIncrement;
+                maxY4 -= yIncrement;
+                viewport4.setMaxY(maxY4);
+                viewport4.setMinY(minY4);
             }
         });
 
@@ -286,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
     // bluetoothIn = new Handler() { ... }
 
     static boolean isStreaming = false;
+    static boolean startReading = false;
 
     @Override
     protected void onResume() {
@@ -324,6 +443,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         mConnectedThread = new ConnectedThread(btSocket);
+        mConnectedThread.setPriority(Thread.NORM_PRIORITY+1);
         mConnectedThread.start();
 
         mReadThread = new ReadThread();
@@ -339,12 +459,25 @@ public class MainActivity extends AppCompatActivity {
                     mConnectedThread.write("Y");
                     buttonStream.setText("Stop");
                     isStreaming = true;
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(600);
+                    } catch (InterruptedException e) {
+                        System.out.println("Interrupted Exception");
+                    }
+                    char tChar = bigString.charAt(bigStringIndex);
+                    while(tChar!='E')
+                    {
+                        bigStringIndex++;
+                        tChar = bigString.charAt(bigStringIndex);
+                    }
+                    startReading = true;
                 }
                 else
                 {
                     mConnectedThread.write("X");
                     buttonStream.setText("Stream");
                     isStreaming = false;
+                    startReading = false;
                 }
             }
         });
@@ -355,22 +488,29 @@ public class MainActivity extends AppCompatActivity {
         // FOR TEST DATA, DELETE LATER
         // DELETE LATER
         //
-        /*
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 //we add 100 new entries
-                for (int i = 0; i < 100; i++) {
+                for (int i = 0; i < 10000; i++) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            addEntry();
+                            //originally just "addEntry();"
+                            if(startReading) {
+                                series1.appendData(new DataPoint(lastX++, dataArr[0][graphIndex]), true, 10);
+                                series2.appendData(new DataPoint(lastX++, dataArr[1][graphIndex]), true, 10);
+                                series3.appendData(new DataPoint(lastX++, dataArr[2][graphIndex]), true, 10);
+                                series4.appendData(new DataPoint(lastX++, dataArr[3][graphIndex]), true, 10);
+                                graphIndex++;
+                            }
                         }
                     });
 
                     // sleep to slow down addition of entries
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(400);
                     } catch (InterruptedException e) {
                         //manage error...
                         e.printStackTrace();
@@ -378,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-        */
+
     }
 
     //add random data to graph
@@ -433,10 +573,52 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             while(true)
             {
+                if (startReading) {
+
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        //manage error...
+                        e.printStackTrace();
+                    }
+
+                    //System.out.println("Reading");
+
+                    bigStringIndex += 2;
+                    String s1 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                    bigStringIndex += 7;
+                    String s2 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                    bigStringIndex += 7;
+                    String s3 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                    bigStringIndex += 7;
+                    String s4 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                    bigStringIndex += 7;
+                    String s5 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                    bigStringIndex += 7;
+
+                    dataArr[0][dataArrIndex] = Integer.parseInt(s1);
+                    dataArr[1][dataArrIndex] = Integer.parseInt(s2);
+                    dataArr[2][dataArrIndex] = Integer.parseInt(s3);
+                    dataArr[3][dataArrIndex] = Integer.parseInt(s4);
+
+                    int i1 = dataArr[0][dataArrIndex];
+                    int i2 = dataArr[1][dataArrIndex];
+                    int i3 = dataArr[2][dataArrIndex];
+                    int i4 = dataArr[3][dataArrIndex];
+
+                    System.out.println(dataArrIndex+": "+i1 + ", " + i2 + ", " + i3 + ", " + i4 + ", " + s5);
+
+                    dataArrIndex++;
+
+                    //instantiate data array
+                    //dataArr[0][dataArrIndex] = v1;
+
+                }
+                /*
                 try {
                     if (isStreaming) {
 
-                        /*
+
                         try {
 
                             System.out.println(br.read());
@@ -444,7 +626,7 @@ public class MainActivity extends AppCompatActivity {
                         } finally {
                             br.close();
                         }
-                        */
+
 
                         FileInputStream fis = new FileInputStream(file);
                         try {
@@ -463,6 +645,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e){
                     System.out.println("Read file not found");
                 }
+                */
             }
         }
     }
@@ -487,10 +670,33 @@ public class MainActivity extends AppCompatActivity {
             mmOutStream = tmpOut;
         }
 
+        int count = 1;
+
         public void run() {
-            byte[] buffer = new byte[64]; //256
+            byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
             int bytes;
 
+            while (true) {
+                if(isStreaming) {
+                    try {
+                        bytes = mmInStream.read(buffer);
+
+                        String readMessage = new String(buffer, 0, bytes);
+                        bigString = bigString.concat(readMessage);
+
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            //manage error...
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        break;
+                    }
+                }
+            }
+            /*
             try {
                 FileOutputStream stream = new FileOutputStream(file);
 
@@ -525,6 +731,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 System.out.println("Write File Not Found");
             }
+            */
         }
         //write method
         public void write(String input) {
