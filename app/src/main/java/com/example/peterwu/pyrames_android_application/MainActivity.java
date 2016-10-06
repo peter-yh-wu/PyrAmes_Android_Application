@@ -104,13 +104,25 @@ public class MainActivity extends AppCompatActivity {
     Viewport viewport4 = null;
 
     @Override
+    public void upload()
+    {
+        ref1.setValue(dataArr[1]);
+        ref2.setValue(dataArr[2]);
+        ref3.setValue(dataArr[3]);
+        ref4.setValue(dataArr[4]);
+    }
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-
+        Firebase.setAndroidContext(this);
+        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference ref1 = mRootRef.child("channel_1");
+        DatabaseReference ref2 = mRootRef.child("channel_2");
+        DatabaseReference ref3 = mRootRef.child("channel_3");
+        DatabaseReference ref4 = mRootRef.child("channel_4");
         //Firebase.setAndroidContext(this);
         //Firebase rootRef = new Firebase("https://pyrames-ca318.firebaseio.com/");
         //Firebase testRef = rootRef.child("testInteger");
