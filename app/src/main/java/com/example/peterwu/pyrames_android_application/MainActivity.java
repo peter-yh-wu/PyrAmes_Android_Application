@@ -9,12 +9,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -28,12 +26,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -62,20 +55,23 @@ public class MainActivity extends AppCompatActivity {
     private LineGraphSeries<DataPoint> series4;
 
     //Viewport variables
+    //
     int minX = 0;
     int maxX = 20;
 
+    int yRange = 600;
+
     int minY1 = 8500;
-    int maxY1 = 9000;
+    int maxY1 = minY1+yRange;
 
     int minY2 = 9000;
-    int maxY2 = 9500;
+    int maxY2 = minY2+yRange;
 
     int minY3 = 11500;
-    int maxY3 = 12000;
+    int maxY3 = minY3+yRange;
 
     int minY4 = 10500;
-    int maxY4 = 11500;
+    int maxY4 = minY4+yRange;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -98,7 +94,14 @@ public class MainActivity extends AppCompatActivity {
 
     int graphIndex = 0;
 
-    int yIncrement = 50;
+    int yIncrement = 100;
+
+    //viewports
+    //
+    Viewport viewport1 = null;
+    Viewport viewport2 = null;
+    Viewport viewport3 = null;
+    Viewport viewport4 = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         series1 = new LineGraphSeries<DataPoint>();
         graph1.addSeries(series1);
         //customize viewport
-        final Viewport viewport1 = graph1.getViewport();
+        viewport1 = graph1.getViewport();
         viewport1.setYAxisBoundsManual(true);
         viewport1.setMinY(minY1);
         viewport1.setMaxY(maxY1);
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         series2 = new LineGraphSeries<DataPoint>();
         graph2.addSeries(series2);
         //customize viewport
-        final Viewport viewport2 = graph2.getViewport();
+        viewport2 = graph2.getViewport();
         viewport2.setYAxisBoundsManual(true);
         viewport2.setMinY(minY2);
         viewport2.setMaxY(maxY2);
@@ -213,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         series3 = new LineGraphSeries<DataPoint>();
         graph3.addSeries(series3);
         //customize viewport
-        final Viewport viewport3 = graph3.getViewport();
+        viewport3 = graph3.getViewport();
         viewport3.setYAxisBoundsManual(true);
         viewport3.setMinY(minY3);
         viewport3.setMaxY(maxY3);
@@ -230,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         series4 = new LineGraphSeries<DataPoint>();
         graph4.addSeries(series4);
         //customize viewport
-        final Viewport viewport4 = graph4.getViewport();
+        viewport4 = graph4.getViewport();
         viewport4.setYAxisBoundsManual(true);
         viewport4.setMinY(minY4);
         viewport4.setMaxY(maxY4);
@@ -321,6 +324,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Auto-scale button
+        final Button buttonAutoScale = (Button) findViewById(R.id.buttonAutoScale);
+        buttonAutoScale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String btnText = (String)buttonAutoScale.getText();
+                if(btnText.equals("Auto-Scale Off")) {
+                    buttonAutoScale.setText("Auto-Scale On");
+                    setAutoScalingOn();
+                }
+                else {
+                    buttonAutoScale.setText("Auto-Scale Off");
+                    setAutoScalingOff();
+                }
+            }
+        });
+
         //bluetooth
         //
         //
@@ -377,6 +397,15 @@ public class MainActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    private boolean autoScaleIsOn = false;
+
+    private void setAutoScalingOn() {
+        autoScaleIsOn = true;
+    }
+
+    private void setAutoScalingOff() {
+        autoScaleIsOn = false;
+    }
 
     final int handlerState = 0;                        //used to identify handler message
     private BluetoothSocket btSocket = null;
@@ -443,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         mConnectedThread = new ConnectedThread(btSocket);
-        mConnectedThread.setPriority(Thread.NORM_PRIORITY+1);
+        mConnectedThread.setPriority(Thread.NORM_PRIORITY+2);
         mConnectedThread.start();
 
         mReadThread = new ReadThread();
@@ -460,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
                     buttonStream.setText("Stop");
                     isStreaming = true;
                     try {
-                        TimeUnit.MILLISECONDS.sleep(600);
+                        TimeUnit.MILLISECONDS.sleep(250);
                     } catch (InterruptedException e) {
                         System.out.println("Interrupted Exception");
                     }
@@ -483,10 +512,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //------------
-        // ? simulate real time with thread that appends data to graph
+        // graphing data thread
         //
-        // FOR TEST DATA, DELETE LATER
-        // DELETE LATER
         //
 
         new Thread(new Runnable() {
@@ -504,13 +531,28 @@ public class MainActivity extends AppCompatActivity {
                                 series3.appendData(new DataPoint(lastX++, dataArr[2][graphIndex]), true, 10);
                                 series4.appendData(new DataPoint(lastX++, dataArr[3][graphIndex]), true, 10);
                                 graphIndex++;
+
+                                if(autoScaleIsOn)
+                                {
+                                    if((graphIndex*4)%maxX==0)
+                                    {
+                                        viewport1.setMinY(dataArr[0][graphIndex]-yRange/2);
+                                        viewport1.setMaxY(dataArr[0][graphIndex]+yRange/2);
+                                        viewport2.setMinY(dataArr[1][graphIndex]-yRange/2);
+                                        viewport2.setMaxY(dataArr[1][graphIndex]+yRange/2);
+                                        viewport3.setMinY(dataArr[2][graphIndex]-yRange/2);
+                                        viewport3.setMaxY(dataArr[2][graphIndex]+yRange/2);
+                                        viewport4.setMinY(dataArr[3][graphIndex]-yRange/2);
+                                        viewport4.setMaxY(dataArr[3][graphIndex]+yRange/2);
+                                    }
+                                }
                             }
                         }
                     });
 
                     // sleep to slow down addition of entries
                     try {
-                        Thread.sleep(400);
+                        Thread.sleep(150);
                     } catch (InterruptedException e) {
                         //manage error...
                         e.printStackTrace();
@@ -576,7 +618,7 @@ public class MainActivity extends AppCompatActivity {
                 if (startReading) {
 
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         //manage error...
                         e.printStackTrace();
@@ -606,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
                     int i3 = dataArr[2][dataArrIndex];
                     int i4 = dataArr[3][dataArrIndex];
 
-                    System.out.println(dataArrIndex+": "+i1 + ", " + i2 + ", " + i3 + ", " + i4 + ", " + s5);
+                    //System.out.println(dataArrIndex+": "+i1 + ", " + i2 + ", " + i3 + ", " + i4 + ", " + s5);
 
                     dataArrIndex++;
 
@@ -685,7 +727,7 @@ public class MainActivity extends AppCompatActivity {
                         bigString = bigString.concat(readMessage);
 
                         try {
-                            Thread.sleep(50);
+                            Thread.sleep(20);
                         } catch (InterruptedException e) {
                             //manage error...
                             e.printStackTrace();
