@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void upload()
     {
+        //testadded
         ref1.setValue(dataArr[1]);
         ref2.setValue(dataArr[2]);
         ref3.setValue(dataArr[3]);
