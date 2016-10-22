@@ -30,6 +30,8 @@ public class Pop extends Activity {
 
     ArrayAdapter mArrayAdapter;
 
+    private static BluetoothDevice device = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +117,8 @@ public class Pop extends Activity {
                     String str = (String)parent.getItemAtPosition(position);
                     System.out.println("Clicked: "+str);
 
-                    pairDevice(bluetooth.getRemoteDevice(str));
+                    device = bluetooth.getRemoteDevice(str);
+                    //pairDevice(bluetooth.getRemoteDevice(str));
                 }
             });
 
@@ -130,6 +133,10 @@ public class Pop extends Activity {
             //
 
         }//if bluetooth != null
+    }
+
+    public static BluetoothDevice getDevice() {
+        return device;
     }
 
     private void pairDevice(BluetoothDevice device) {

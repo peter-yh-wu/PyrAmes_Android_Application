@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -30,10 +31,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 //import com.jjoe64.graphview_demos.MainActivity;
@@ -57,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
     //Viewport variables
     //
     int minX = 0;
-    int maxX = 20;
+    int maxX = 30;
 
-    int yRange = 600;
+    int yRange = 1500;
 
     int minY1 = 8500;
     int maxY1 = minY1+yRange;
@@ -73,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
     int minY4 = 10500;
     int maxY4 = minY4+yRange;
 
+    DatabaseReference mRootRef;
+
+    DatabaseReference ref1, ref2, ref3, ref4;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -103,27 +113,67 @@ public class MainActivity extends AppCompatActivity {
     Viewport viewport3 = null;
     Viewport viewport4 = null;
 
-    @Override
+    //Thread Pool Executor
+    //Thread Pool Executor
+    //
+    // TO DO TO DO TO DO TO DO
+    //
+    //
+    //
+    //private ThreadPoolExecutor mPool;
+
+    private boolean autoScaleIsOn = false;
+    private void setAutoScalingOn() {
+        autoScaleIsOn = true;
+    }
+    private void setAutoScalingOff() {
+        autoScaleIsOn = false;
+    }
+
     public void upload()
     {
-        //testadded
-        ref1.setValue(dataArr[1]);
-        ref2.setValue(dataArr[2]);
-        ref3.setValue(dataArr[3]);
-        ref4.setValue(dataArr[4]);
+        //test added
+        ArrayList<Integer> r1 = new ArrayList<Integer>();
+        ArrayList<Integer> r2= new ArrayList<Integer>();
+        ArrayList<Integer> r3= new ArrayList<Integer>();
+        ArrayList<Integer> r4= new ArrayList<Integer>();
+        for(int i = 0;i < dataArr[0].length;i++)
+        {
+            r1.add(dataArr[0][i]);
+            r2.add(dataArr[1][i]);
+            r3.add(dataArr[2][i]);
+            r4.add(dataArr[3][i]);
+        }
+
+        //ArrayList<Integer> test = new ArrayList<Integer>();
+        //test.add(1);
+        //test.add(2);
+        //ref1.setValue(test);
+        ref1.setValue(r1);
+        ref2.setValue(r2);
+        ref3.setValue(r3);
+        ref4.setValue(r4);
     }
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //startActivity(new Intent(MainActivity.this,Pop.class));
+
+        //Firebase Code
+        //
+        //
+        //
 
         Firebase.setAndroidContext(this);
-        DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference ref1 = mRootRef.child("channel_1");
-        DatabaseReference ref2 = mRootRef.child("channel_2");
-        DatabaseReference ref3 = mRootRef.child("channel_3");
-        DatabaseReference ref4 = mRootRef.child("channel_4");
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+
+        ref1 = mRootRef.child("channel_1");
+        ref2 = mRootRef.child("channel_2");
+        ref3 = mRootRef.child("channel_3");
+        ref4 = mRootRef.child("channel_4");
+
         //Firebase.setAndroidContext(this);
         //Firebase rootRef = new Firebase("https://pyrames-ca318.firebaseio.com/");
         //Firebase testRef = rootRef.child("testInteger");
@@ -148,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         myRef.setValue(tester);
 
 
-        System.out.println("Entered onCreate");
+        //System.out.println("Entered onCreate");
 
         //File
         //
@@ -170,6 +220,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         */
+
+        //------------------
+        //Graphics
+        //
+        //
+        //
+
+        // upload button
+        Button buttonUpload = (Button) findViewById(R.id.buttonUpload);
+
+        buttonUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upload();
+            }
+        });
 
         //
         // pop-up window
@@ -343,30 +409,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String btnText = (String)buttonAutoScale.getText();
-                if(btnText.equals("Auto-Scale Off")) {
-                    buttonAutoScale.setText("Auto-Scale On");
+                if(btnText.equals("Auto-Scale Is Off")) {
+                    buttonAutoScale.setText("Auto-Scale Is On");
                     setAutoScalingOn();
                 }
                 else {
-                    buttonAutoScale.setText("Auto-Scale Off");
+                    buttonAutoScale.setText("Auto-Scale Is Off");
                     setAutoScalingOff();
                 }
             }
         });
 
+        //------------------
         //bluetooth
-        //
+        // code for bluetooth, bluetooth code
         //
         //
         //
 
         bluetooth = BluetoothAdapter.getDefaultAdapter();
 
-        TextView textView1 = (TextView) findViewById(R.id.tv1);
-
         if (bluetooth != null) {
-            //System.out.println("bluetooth isn't null");
-            textView1.setText("bluetooth isn't null");
+            System.out.println("bluetooth isn't null");
 
             String status;
             if (!bluetooth.isEnabled()) {
@@ -375,55 +439,25 @@ public class MainActivity extends AppCompatActivity {
             String mydeviceaddress = bluetooth.getAddress();
             String mydevicename = bluetooth.getName();
             status = mydevicename + " : " + mydeviceaddress;
-            textView1.setText(status);
-
-            //
-            // get paired devices
-            //
-            //
-            //
-            ArrayList<String> al1 = new ArrayList<String>();
-            //ArrayAdapter<String> mArrayAdapter = new ArrayAdapter<String>();
-            Set<BluetoothDevice> pairedDevices = bluetooth.getBondedDevices();
-            // If there are paired devices
-            if (pairedDevices.size() > 0) {
-                System.out.println("Paired with:");
-                // Loop through paired devices
-                for (BluetoothDevice device : pairedDevices) {
-                    // Add the name and address to an array adapter to show in a ListView
-                    //mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                    al1.add(device.getName());
-                    System.out.println(device.getName());
-                }
-            }
-            else {
-                System.out.println("Not paired with a device");
-            }
-
-
-
-
-
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private boolean autoScaleIsOn = false;
-
-    private void setAutoScalingOn() {
-        autoScaleIsOn = true;
-    }
-
-    private void setAutoScalingOff() {
-        autoScaleIsOn = false;
-    }
-
     final int handlerState = 0;                        //used to identify handler message
     private BluetoothSocket btSocket = null;
     private StringBuilder recDataString = new StringBuilder();
 
+    //Threads
+    //
+    //
+
+    //Thread Pool Executor
+
+    //ExecutorService fixedPool = Executors.newFixedThreadPool(3);
+
+    //Other Threads
     private ConnectedThread mConnectedThread;
     private ReadThread mReadThread;
 
@@ -452,13 +486,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        System.out.println("Resuming Main Activity");
+        //System.out.println("Resuming Main Activity");
 
         //
         // streams data if device is connected
         //
 
         BluetoothDevice device = null;
+        //temporarily disable
         Set<BluetoothDevice> pairedDevices = bluetooth.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice tDevice : pairedDevices) {
@@ -466,56 +501,80 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        if(device==null)
+            System.out.println("Device null");
+        else
+            System.out.println("address: "+device.getAddress());
+
+        /*
+        if(device==null) {
+            device = Pop.getDevice();
+        }
+        */
+
+        //if(device!=null) {
+            /*
+            //pair device
+            try {
+                Method method = device.getClass().getMethod("createBond", (Class[]) null);
+                method.invoke(device, (Object[]) null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            */
+
+        //create socket...
         try {
             btSocket = createBluetoothSocket(device);
-        } catch (IOException e) {
-            Toast.makeText(getBaseContext(), "Socket creation failed", Toast.LENGTH_LONG).show();
+            //Method m= device.getClass().getMethod("createRfcommSocket", new Class[]{int.class});
+            //btSocket = (BluetoothSocket) m.invoke(device, 1);
+        } catch (Exception e) {
+            System.out.println("Socket creation failed");
+            //Toast.makeText(getBaseContext(), "Socket creation failed", Toast.LENGTH_LONG).show();
         }
+
         // Establish the Bluetooth socket connection.
-        try
-        {
+        try {
             btSocket.connect();
+            System.out.println("Socket Connected");
         } catch (IOException e) {
-            try
-            {
+            System.out.println("Socket Didn't Connect");
+            try {
                 btSocket.close();
-            } catch (IOException e2)
-            {
+            } catch (IOException e2) {
                 //insert code to deal with this
             }
         }
         mConnectedThread = new ConnectedThread(btSocket);
-        mConnectedThread.setPriority(Thread.NORM_PRIORITY+2);
+        mConnectedThread.setPriority(Thread.MAX_PRIORITY);
+        //mConnectedThread.setPriority(Thread.NORM_PRIORITY+4);
         mConnectedThread.start();
 
         mReadThread = new ReadThread();
         mReadThread.start();
+        mConnectedThread.setPriority(Thread.NORM_PRIORITY + 2);
 
         final Button buttonStream = (Button) findViewById(R.id.buttonStream);
         buttonStream.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String btnText = (String)buttonStream.getText();
-                if(btnText.equals("Stream"))
-                {
+                String btnText = (String) buttonStream.getText();
+                if (btnText.equals("Stream")) {
                     mConnectedThread.write("Y");
                     buttonStream.setText("Stop");
                     isStreaming = true;
                     try {
-                        TimeUnit.MILLISECONDS.sleep(250);
+                        TimeUnit.MILLISECONDS.sleep(200);
                     } catch (InterruptedException e) {
                         System.out.println("Interrupted Exception");
                     }
                     char tChar = bigString.charAt(bigStringIndex);
-                    while(tChar!='E')
-                    {
+                    while (tChar != 'E') {
                         bigStringIndex++;
                         tChar = bigString.charAt(bigStringIndex);
                     }
                     startReading = true;
-                }
-                else
-                {
+                } else {
                     mConnectedThread.write("X");
                     buttonStream.setText("Stream");
                     isStreaming = false;
@@ -526,7 +585,7 @@ public class MainActivity extends AppCompatActivity {
 
         //------------
         // graphing data thread
-        //
+        // graph thread, display thread
         //
 
         new Thread(new Runnable() {
@@ -538,26 +597,24 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //originally just "addEntry();"
-                            if(startReading) {
-                                series1.appendData(new DataPoint(lastX++, dataArr[0][graphIndex]), true, 10);
-                                series2.appendData(new DataPoint(lastX++, dataArr[1][graphIndex]), true, 10);
-                                series3.appendData(new DataPoint(lastX++, dataArr[2][graphIndex]), true, 10);
-                                series4.appendData(new DataPoint(lastX++, dataArr[3][graphIndex]), true, 10);
+                            int pseudoGraphIndex = graphIndex * 5;
+
+                            if (startReading) {
+                                series1.appendData(new DataPoint(lastX++, dataArr[0][pseudoGraphIndex]), true, 10);
+                                series2.appendData(new DataPoint(lastX++, dataArr[1][pseudoGraphIndex]), true, 10);
+                                series3.appendData(new DataPoint(lastX++, dataArr[2][pseudoGraphIndex]), true, 10);
+                                series4.appendData(new DataPoint(lastX++, dataArr[3][pseudoGraphIndex]), true, 10);
                                 graphIndex++;
 
-                                if(autoScaleIsOn)
-                                {
-                                    if((graphIndex*4)%maxX==0)
-                                    {
-                                        viewport1.setMinY(dataArr[0][graphIndex]-yRange/2);
-                                        viewport1.setMaxY(dataArr[0][graphIndex]+yRange/2);
-                                        viewport2.setMinY(dataArr[1][graphIndex]-yRange/2);
-                                        viewport2.setMaxY(dataArr[1][graphIndex]+yRange/2);
-                                        viewport3.setMinY(dataArr[2][graphIndex]-yRange/2);
-                                        viewport3.setMaxY(dataArr[2][graphIndex]+yRange/2);
-                                        viewport4.setMinY(dataArr[3][graphIndex]-yRange/2);
-                                        viewport4.setMaxY(dataArr[3][graphIndex]+yRange/2);
-                                    }
+                                if (autoScaleIsOn) {
+                                    viewport1.setMinY(series1.getLowestValueY());
+                                    viewport1.setMaxY(series1.getHighestValueY());
+                                    viewport2.setMinY(series2.getLowestValueY());
+                                    viewport2.setMaxY(series2.getHighestValueY());
+                                    viewport3.setMinY(series3.getLowestValueY());
+                                    viewport3.setMaxY(series3.getHighestValueY());
+                                    viewport4.setMinY(series4.getLowestValueY());
+                                    viewport4.setMaxY(series4.getHighestValueY());
                                 }
                             }
                         }
@@ -565,7 +622,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // sleep to slow down addition of entries
                     try {
-                        Thread.sleep(150);
+                        Thread.sleep(500); // display 30 points &
                     } catch (InterruptedException e) {
                         //manage error...
                         e.printStackTrace();
@@ -573,16 +630,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-
+        //}
     }
-
-    //add random data to graph
-    /*
-    private void addEntry() {
-        //display max 10 point on viewport and scroll to end
-        series.appendData(new DataPoint(lastX++, RANDOM.nextDouble() * 10d), true, 10);
-    }
-    */
 
     @Override
     public void onPause()
@@ -593,6 +642,7 @@ public class MainActivity extends AppCompatActivity {
             //Don't leave Bluetooth sockets open when leaving activity
             btSocket.close();
         } catch (IOException e2) {
+            System.out.println("Bluetooth Socket Didn't Close");
             //insert code to deal with this
         }
     }
@@ -605,6 +655,11 @@ public class MainActivity extends AppCompatActivity {
     // Display Device Battery Life somewhere
     // TO DO
     // TO DO
+    //
+    //
+
+    //read thread
+    //
     //
     //
 
@@ -631,7 +686,7 @@ public class MainActivity extends AppCompatActivity {
                 if (startReading) {
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(90);
                     } catch (InterruptedException e) {
                         //manage error...
                         e.printStackTrace();
@@ -705,6 +760,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // stream data thread
+    //
+    //
+    //
+
     //create new class for connect thread
     private class ConnectedThread extends Thread {
         private final InputStream mmInStream;
@@ -740,7 +800,7 @@ public class MainActivity extends AppCompatActivity {
                         bigString = bigString.concat(readMessage);
 
                         try {
-                            Thread.sleep(20);
+                            Thread.sleep(50);
                         } catch (InterruptedException e) {
                             //manage error...
                             e.printStackTrace();
@@ -837,6 +897,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+
+        try {
+            btSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
