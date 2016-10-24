@@ -43,17 +43,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-//import com.jjoe64.graphview_demos.MainActivity;
-//import com.jjoe64.graphview_demos.R;
-
 public class MainActivity extends AppCompatActivity {
 
     BluetoothAdapter bluetooth;
 
-    plotDynamic pd;
-
     //DELETE
-    private static final Random RANDOM = new Random();
     private int lastX = 0;
 
     private LineGraphSeries<DataPoint> series1;
@@ -63,25 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
     //Viewport variables
     //
-    int minX = 0;
-    int maxX = 30;
-
+    int minX = 0; int maxX = 30;
     int yRange = 1500;
+    int minY1 = 8500; int maxY1 = minY1+yRange;
+    int minY2 = 9000; int maxY2 = minY2+yRange;
+    int minY3 = 11500; int maxY3 = minY3+yRange;
+    int minY4 = 10500; int maxY4 = minY4+yRange;
 
-    int minY1 = 8500;
-    int maxY1 = minY1+yRange;
-
-    int minY2 = 9000;
-    int maxY2 = minY2+yRange;
-
-    int minY3 = 11500;
-    int maxY3 = minY3+yRange;
-
-    int minY4 = 10500;
-    int maxY4 = minY4+yRange;
-
+    //For Firebase
+    //
     DatabaseReference mRootRef;
-
     DatabaseReference ref1, ref2, ref3, ref4;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -108,16 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
     //viewports
     //
-    Viewport viewport1 = null;
-    Viewport viewport2 = null;
-    Viewport viewport3 = null;
-    Viewport viewport4 = null;
+    Viewport viewport1 = null; Viewport viewport2 = null; Viewport viewport3 = null; Viewport viewport4 = null;
 
     //Thread Pool Executor
     //Thread Pool Executor
     //
     // TO DO TO DO TO DO TO DO
-    //
     //
     //
     //private ThreadPoolExecutor mPool;
@@ -132,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void upload()
     {
-        //test added
         ArrayList<Integer> r1 = new ArrayList<Integer>();
         ArrayList<Integer> r2= new ArrayList<Integer>();
         ArrayList<Integer> r3= new ArrayList<Integer>();
@@ -144,16 +124,12 @@ public class MainActivity extends AppCompatActivity {
             r3.add(dataArr[2][i]);
             r4.add(dataArr[3][i]);
         }
-
-        //ArrayList<Integer> test = new ArrayList<Integer>();
-        //test.add(1);
-        //test.add(2);
-        //ref1.setValue(test);
         ref1.setValue(r1);
         ref2.setValue(r2);
         ref3.setValue(r3);
         ref4.setValue(r4);
     }
+
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -165,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         //
         //
         //
-
         Firebase.setAndroidContext(this);
         mRootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -182,28 +157,24 @@ public class MainActivity extends AppCompatActivity {
         tester.add(22);
         tester.add(25);
         //rootRef.setValue(tester);
-
-        
         //DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
         //mRootRef.setValue(tester);
         //hello
-
-
         //String test = FirebaseDatabase.getSdkVersion();
         //System.out.println(test);
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-
         myRef.setValue(tester);
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         //System.out.println("Entered onCreate");
 
         //File
         //
         //
-
         /*
 
         //dir = new File(path);
@@ -218,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             System.out.println("IOException while creating file");
         }
-
         */
 
         //------------------
@@ -226,24 +196,21 @@ public class MainActivity extends AppCompatActivity {
         //
         //
         //
-
         // upload button
         Button buttonUpload = (Button) findViewById(R.id.buttonUpload);
-
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 upload();
             }
         });
+        //
+        // TO DO: SHOW UPLOAD BUTTON ONLY WHEN "STOP" BUTTON SHOWS
+        //
 
         //
         // pop-up window
-        //
-        //
-        //
         Button buttonPopUp = (Button) findViewById(R.id.buttonPopUp);
-
         buttonPopUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,71 +221,56 @@ public class MainActivity extends AppCompatActivity {
         //
         // Graphs
         //
-        //graphview 1
-        //
-        //
-        GraphView graph1 = (GraphView) findViewById(R.id.graph1);
         //data
         series1 = new LineGraphSeries<DataPoint>();
+        series2 = new LineGraphSeries<DataPoint>();
+        series3 = new LineGraphSeries<DataPoint>();
+        series4 = new LineGraphSeries<DataPoint>();
+
+        //customize viewports
+        GraphView graph1 = (GraphView) findViewById(R.id.graph1);
         graph1.addSeries(series1);
-        //customize viewport
         viewport1 = graph1.getViewport();
         viewport1.setYAxisBoundsManual(true);
         viewport1.setMinY(minY1);
         viewport1.setMaxY(maxY1);
         viewport1.setScrollable(true);
-
         viewport1.setXAxisBoundsManual(true);
         viewport1.setMinX(minX);
         viewport1.setMaxX(maxX);
 
-        //get graphview instance
         GraphView graph2 = (GraphView) findViewById(R.id.graph2);
-        //data
-        series2 = new LineGraphSeries<DataPoint>();
         graph2.addSeries(series2);
-        //customize viewport
         viewport2 = graph2.getViewport();
         viewport2.setYAxisBoundsManual(true);
         viewport2.setMinY(minY2);
         viewport2.setMaxY(maxY2);
         viewport2.setScrollable(true);
         viewport2.setScalable(true);
-
         viewport2.setXAxisBoundsManual(true);
         viewport2.setMinX(minX);
         viewport2.setMaxX(maxX);
 
-        //get graphview instance
         GraphView graph3 = (GraphView) findViewById(R.id.graph3);
-        //data
-        series3 = new LineGraphSeries<DataPoint>();
         graph3.addSeries(series3);
-        //customize viewport
         viewport3 = graph3.getViewport();
         viewport3.setYAxisBoundsManual(true);
         viewport3.setMinY(minY3);
         viewport3.setMaxY(maxY3);
         viewport3.setScrollable(true);
         viewport3.setScalable(true);
-
         viewport3.setXAxisBoundsManual(true);
         viewport3.setMinX(minX);
         viewport3.setMaxX(maxX);
 
-        //get graphview instance
         GraphView graph4 = (GraphView) findViewById(R.id.graph4);
-        //data
-        series4 = new LineGraphSeries<DataPoint>();
         graph4.addSeries(series4);
-        //customize viewport
         viewport4 = graph4.getViewport();
         viewport4.setYAxisBoundsManual(true);
         viewport4.setMinY(minY4);
         viewport4.setMaxY(maxY4);
         viewport4.setScrollable(true);
         viewport4.setScalable(true);
-
         viewport4.setXAxisBoundsManual(true);
         viewport4.setMinX(minX);
         viewport4.setMaxX(maxX);
@@ -335,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
                 viewport1.setMinY(minY1);
             }
         });
-
         final Button button2 = (Button) findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -345,7 +296,6 @@ public class MainActivity extends AppCompatActivity {
                 viewport1.setMinY(minY1);
             }
         });
-
         final Button button3 = (Button) findViewById(R.id.button3);
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -364,7 +314,6 @@ public class MainActivity extends AppCompatActivity {
                 viewport2.setMinY(minY2);
             }
         });
-
         final Button button5 = (Button) findViewById(R.id.button5);
         button5.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -383,7 +332,6 @@ public class MainActivity extends AppCompatActivity {
                 viewport3.setMinY(minY3);
             }
         });
-
         final Button button7 = (Button) findViewById(R.id.button7);
         button7.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -402,7 +350,6 @@ public class MainActivity extends AppCompatActivity {
                 viewport4.setMinY(minY4);
             }
         });
-
         //Auto-scale button
         final Button buttonAutoScale = (Button) findViewById(R.id.buttonAutoScale);
         buttonAutoScale.setOnClickListener(new View.OnClickListener() {
@@ -426,23 +373,15 @@ public class MainActivity extends AppCompatActivity {
         //
         //
         //
-
         bluetooth = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetooth != null) {
             System.out.println("bluetooth isn't null");
 
-            String status;
             if (!bluetooth.isEnabled()) {
                 bluetooth.enable();
             }
-            String mydeviceaddress = bluetooth.getAddress();
-            String mydevicename = bluetooth.getName();
-            status = mydevicename + " : " + mydeviceaddress;
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     final int handlerState = 0;                        //used to identify handler message
@@ -464,20 +403,11 @@ public class MainActivity extends AppCompatActivity {
     // SPP UUID service - this should work for most devices
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    // String for MAC address
-    private static String address;
-
-    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
-
+    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException
+    {
         return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
         //creates secure outgoing connecetion with BT device using UUID
     }
-
-    // ?
-    // ultimately for parsing data stream?
-    // https://wingoodharry.wordpress.com/2014/04/15/android-sendreceive-data-with-arduino-using-bluetooth-part-2/
-    //
-    // bluetoothIn = new Handler() { ... }
 
     static boolean isStreaming = false;
     static boolean startReading = false;
@@ -587,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
         // graphing data thread
         // graph thread, display thread
         //
-
+        //
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -646,9 +576,6 @@ public class MainActivity extends AppCompatActivity {
             //insert code to deal with this
         }
     }
-
-    //private static String bigString = "";
-
 
     //
     //
@@ -862,28 +789,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    // ---------------------------------------
-    // for Google API Usage
-    //
-    //
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -908,5 +813,26 @@ public class MainActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+    // ------------------------------------------------------
+    // for Google API Usage
+    //
+    //
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
     }
 }
