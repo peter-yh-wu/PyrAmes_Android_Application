@@ -43,6 +43,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+//pass: pyrames123
+//autoscaling
+
 public class MainActivity extends AppCompatActivity {
 
     BluetoothAdapter bluetooth;
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void upload()
     {
-        ArrayList<Integer> r1 = new ArrayList<Integer>();
+        /*ArrayList<Integer> r1 = new ArrayList<Integer>();
         ArrayList<Integer> r2= new ArrayList<Integer>();
         ArrayList<Integer> r3= new ArrayList<Integer>();
         ArrayList<Integer> r4= new ArrayList<Integer>();
@@ -124,16 +127,18 @@ public class MainActivity extends AppCompatActivity {
             r3.add(dataArr[2][i]);
             r4.add(dataArr[3][i]);
         }
-        ref1.setValue(r1);
+        ref1.setValue("1");
         ref2.setValue(r2);
-        ref3.setValue(r3);
-        ref4.setValue(r4);
+        ref3.setValue(r3);*/
+        ref4.setValue("is working");
     }
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //android.os.Debug.waitForDebugger();
 
         //startActivity(new Intent(MainActivity.this,Pop.class));
 
@@ -143,28 +148,29 @@ public class MainActivity extends AppCompatActivity {
         //
         Firebase.setAndroidContext(this);
         mRootRef = FirebaseDatabase.getInstance().getReference();
-
-        ref1 = mRootRef.child("channel_1");
+        mRootRef.setValue("x");
+        System.out.println("here");
+        /*ref1 = mRootRef.child("channel_1");
         ref2 = mRootRef.child("channel_2");
         ref3 = mRootRef.child("channel_3");
         ref4 = mRootRef.child("channel_4");
-
+        upload();*/
         //Firebase.setAndroidContext(this);
         //Firebase rootRef = new Firebase("https://pyrames-ca318.firebaseio.com/");
         //Firebase testRef = rootRef.child("testInteger");
         //int tester = 22;
-        ArrayList<Integer> tester = new ArrayList<Integer>();
-        tester.add(22);
-        tester.add(25);
+        //ArrayList<Integer> tester = new ArrayList<Integer>();
+        //tester.add(22);
+        //tester.add(25);
         //rootRef.setValue(tester);
         //DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
         //mRootRef.setValue(tester);
         //hello
         //String test = FirebaseDatabase.getSdkVersion();
         //System.out.println(test);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-        myRef.setValue(tester);
+        //FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //DatabaseReference myRef = database.getReference();
+        //myRef.setValue(tester);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -499,10 +505,16 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("Interrupted Exception");
                     }
                     char tChar = bigString.charAt(bigStringIndex);
-                    while (tChar != 'E') {
+                    char tChar2 = bigString.charAt(bigStringIndex+37);
+                    while (tChar != 'E' || tChar2 != 'E') {
                         bigStringIndex++;
                         tChar = bigString.charAt(bigStringIndex);
+                        tChar2 = bigString.charAt(bigStringIndex+37);
                     }
+
+                    System.out.println(bigStringIndex);
+                    System.out.println(bigString);
+
                     startReading = true;
                 } else {
                     mConnectedThread.write("X");
@@ -595,7 +607,6 @@ public class MainActivity extends AppCompatActivity {
         //private final BufferedReader br;
 
         private ReadThread() {
-
             /*
             BufferedReader tBR = null;
             try {
