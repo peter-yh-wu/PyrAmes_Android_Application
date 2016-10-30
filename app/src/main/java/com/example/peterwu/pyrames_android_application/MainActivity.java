@@ -77,13 +77,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private GoogleApiClient client;
 
-    //File
-    File dir;
-    File file;
-    //File file = new File("C:/file.txt");
-
-    String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/data";
-
     String bigString = "";
     int bigStringIndex = 0;
 
@@ -98,14 +91,6 @@ public class MainActivity extends AppCompatActivity {
     //
     Viewport viewport1 = null; Viewport viewport2 = null; Viewport viewport3 = null; Viewport viewport4 = null;
 
-    //Thread Pool Executor
-    //Thread Pool Executor
-    //
-    // TO DO TO DO TO DO TO DO
-    //
-    //
-    //private ThreadPoolExecutor mPool;
-
     private boolean autoScaleIsOn = false;
     private void setAutoScalingOn() {
         autoScaleIsOn = true;
@@ -116,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void upload()
     {
-        /*ArrayList<Integer> r1 = new ArrayList<Integer>();
+        ArrayList<Integer> r1 = new ArrayList<Integer>();
         ArrayList<Integer> r2= new ArrayList<Integer>();
         ArrayList<Integer> r3= new ArrayList<Integer>();
         ArrayList<Integer> r4= new ArrayList<Integer>();
@@ -127,10 +112,11 @@ public class MainActivity extends AppCompatActivity {
             r3.add(dataArr[2][i]);
             r4.add(dataArr[3][i]);
         }
-        ref1.setValue("1");
+        //System.out.println(r1);
+        ref1.setValue(r1);
         ref2.setValue(r2);
-        ref3.setValue(r3);*/
-        ref4.setValue("is working");
+        ref3.setValue(r3);
+        ref4.setValue(r4);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,37 +126,16 @@ public class MainActivity extends AppCompatActivity {
 
         //android.os.Debug.waitForDebugger();
 
-        //startActivity(new Intent(MainActivity.this,Pop.class));
-
         //Firebase Code
         //
         //
         //
         Firebase.setAndroidContext(this);
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        mRootRef.setValue("x");
-        System.out.println("here");
-        /*ref1 = mRootRef.child("channel_1");
+        ref1 = mRootRef.child("channel_1");
         ref2 = mRootRef.child("channel_2");
         ref3 = mRootRef.child("channel_3");
         ref4 = mRootRef.child("channel_4");
-        upload();*/
-        //Firebase.setAndroidContext(this);
-        //Firebase rootRef = new Firebase("https://pyrames-ca318.firebaseio.com/");
-        //Firebase testRef = rootRef.child("testInteger");
-        //int tester = 22;
-        //ArrayList<Integer> tester = new ArrayList<Integer>();
-        //tester.add(22);
-        //tester.add(25);
-        //rootRef.setValue(tester);
-        //DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-        //mRootRef.setValue(tester);
-        //hello
-        //String test = FirebaseDatabase.getSdkVersion();
-        //System.out.println(test);
-        //FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //DatabaseReference myRef = database.getReference();
-        //myRef.setValue(tester);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -178,28 +143,8 @@ public class MainActivity extends AppCompatActivity {
 
         //System.out.println("Entered onCreate");
 
-        //File
-        //
-        //
-        /*
-
-        //dir = new File(path);
-        //dir.mkdirs();
-        //file = new File(path+"/file.txt");
-        //file = new File(Environment.getExternalStorageDirectory() + File.separator + "test.txt");
-        File external = Environment.getExternalStorageDirectory();
-        String sdcardPath = external.getPath();
-        file = new File(sdcardPath + "/Documents/file.txt");
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            System.out.println("IOException while creating file");
-        }
-        */
-
         //------------------
         //Graphics
-        //
         //
         //
         // upload button
@@ -394,18 +339,6 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothSocket btSocket = null;
     private StringBuilder recDataString = new StringBuilder();
 
-    //Threads
-    //
-    //
-
-    //Thread Pool Executor
-
-    //ExecutorService fixedPool = Executors.newFixedThreadPool(3);
-
-    //Other Threads
-    private ConnectedThread mConnectedThread;
-    private ReadThread mReadThread;
-
     // SPP UUID service - this should work for most devices
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -417,6 +350,9 @@ public class MainActivity extends AppCompatActivity {
 
     static boolean isStreaming = false;
     static boolean startReading = false;
+
+    private InputStream mmInStream;
+    private static OutputStream mmOutStream;
 
     @Override
     protected void onResume() {
@@ -442,23 +378,6 @@ public class MainActivity extends AppCompatActivity {
         else
             System.out.println("address: "+device.getAddress());
 
-        /*
-        if(device==null) {
-            device = Pop.getDevice();
-        }
-        */
-
-        //if(device!=null) {
-            /*
-            //pair device
-            try {
-                Method method = device.getClass().getMethod("createBond", (Class[]) null);
-                method.invoke(device, (Object[]) null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            */
-
         //create socket...
         try {
             btSocket = createBluetoothSocket(device);
@@ -481,14 +400,18 @@ public class MainActivity extends AppCompatActivity {
                 //insert code to deal with this
             }
         }
-        mConnectedThread = new ConnectedThread(btSocket);
-        mConnectedThread.setPriority(Thread.MAX_PRIORITY);
-        //mConnectedThread.setPriority(Thread.NORM_PRIORITY+4);
-        mConnectedThread.start();
 
-        mReadThread = new ReadThread();
-        mReadThread.start();
-        mConnectedThread.setPriority(Thread.NORM_PRIORITY + 2);
+        InputStream tmpIn = null;
+        OutputStream tmpOut = null;
+
+        try {
+            //Create I/O streams for connection
+            tmpIn = btSocket.getInputStream();
+            tmpOut = btSocket.getOutputStream();
+        } catch (IOException e) { }
+
+        mmInStream = tmpIn;
+        mmOutStream = tmpOut;
 
         final Button buttonStream = (Button) findViewById(R.id.buttonStream);
         buttonStream.setOnClickListener(new View.OnClickListener() {
@@ -496,28 +419,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String btnText = (String) buttonStream.getText();
                 if (btnText.equals("Stream")) {
-                    mConnectedThread.write("Y");
+                    //mConnectedThread.write("Y");
+                    MainActivity.write("Y");
                     buttonStream.setText("Stop");
                     isStreaming = true;
+                    /*
                     try {
                         TimeUnit.MILLISECONDS.sleep(200);
                     } catch (InterruptedException e) {
                         System.out.println("Interrupted Exception");
                     }
-                    char tChar = bigString.charAt(bigStringIndex);
-                    char tChar2 = bigString.charAt(bigStringIndex+37);
-                    while (tChar != 'E' || tChar2 != 'E') {
-                        bigStringIndex++;
-                        tChar = bigString.charAt(bigStringIndex);
-                        tChar2 = bigString.charAt(bigStringIndex+37);
-                    }
-
-                    System.out.println(bigStringIndex);
-                    System.out.println(bigString);
-
-                    startReading = true;
+                    */
                 } else {
-                    mConnectedThread.write("X");
+                    //mConnectedThread.write("X");
+                    MainActivity.write("X");
                     buttonStream.setText("Stream");
                     isStreaming = false;
                     startReading = false;
@@ -530,33 +445,103 @@ public class MainActivity extends AppCompatActivity {
         // graph thread, display thread
         //
         //
+
         new Thread(new Runnable() {
+            byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
+            int bytes;
+
             @Override
             public void run() {
                 //we add 100 new entries
-                for (int i = 0; i < 10000; i++) {
+                for (int i = 0; i < 1000000; i++) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //originally just "addEntry();"
-                            int pseudoGraphIndex = graphIndex * 5;
+                            if(isStreaming) {
+                                try {
+                                    bytes = mmInStream.read(buffer);
 
-                            if (startReading) {
-                                series1.appendData(new DataPoint(lastX++, dataArr[0][pseudoGraphIndex]), true, 10);
-                                series2.appendData(new DataPoint(lastX++, dataArr[1][pseudoGraphIndex]), true, 10);
-                                series3.appendData(new DataPoint(lastX++, dataArr[2][pseudoGraphIndex]), true, 10);
-                                series4.appendData(new DataPoint(lastX++, dataArr[3][pseudoGraphIndex]), true, 10);
-                                graphIndex++;
+                                    String readMessage = new String(buffer, 0, bytes);
+                                    bigString = bigString.concat(readMessage);
 
-                                if (autoScaleIsOn) {
-                                    viewport1.setMinY(series1.getLowestValueY());
-                                    viewport1.setMaxY(series1.getHighestValueY());
-                                    viewport2.setMinY(series2.getLowestValueY());
-                                    viewport2.setMaxY(series2.getHighestValueY());
-                                    viewport3.setMinY(series3.getLowestValueY());
-                                    viewport3.setMaxY(series3.getHighestValueY());
-                                    viewport4.setMinY(series4.getLowestValueY());
-                                    viewport4.setMaxY(series4.getHighestValueY());
+                                } catch (IOException e) {
+                                    System.out.println("Can't read mmInStream");
+                                }
+
+                                if(!startReading&&bigString.length()>74) {
+
+                                    try {
+                                        TimeUnit.MILLISECONDS.sleep(200);
+                                    } catch (InterruptedException e) {
+                                        System.out.println("Interrupted Exception");
+                                    }
+
+                                    char tChar = bigString.charAt(bigStringIndex);
+                                    char tChar2 = bigString.charAt(bigStringIndex + 37);
+
+                                    System.out.println(tChar + " " +tChar2);
+
+                                    while (tChar != 'E' || tChar2 != 'E') {
+                                        bigStringIndex++;
+                                        tChar = bigString.charAt(bigStringIndex);
+                                        tChar2 = bigString.charAt(bigStringIndex + 37);
+                                    }
+
+                                    //System.out.println(bigStringIndex);
+                                    //System.out.println(bigString);
+
+                                    startReading = true;
+                                }
+
+                                if (startReading&&bigString.length()>(37*(dataArrIndex+1)+37*10)) {
+
+                                    bigStringIndex += 2;
+                                    String s1 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                                    bigStringIndex += 7;
+                                    String s2 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                                    bigStringIndex += 7;
+                                    String s3 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                                    bigStringIndex += 7;
+                                    String s4 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                                    bigStringIndex += 7;
+                                    String s5 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                                    bigStringIndex += 7;
+
+                                    dataArr[0][dataArrIndex] = Integer.parseInt(s1);
+                                    dataArr[1][dataArrIndex] = Integer.parseInt(s2);
+                                    dataArr[2][dataArrIndex] = Integer.parseInt(s3);
+                                    dataArr[3][dataArrIndex] = Integer.parseInt(s4);
+
+                                    int i1 = dataArr[0][dataArrIndex];
+                                    int i2 = dataArr[1][dataArrIndex];
+                                    int i3 = dataArr[2][dataArrIndex];
+                                    int i4 = dataArr[3][dataArrIndex];
+
+                                    //System.out.println(i1+" "+i2+" "+i3+" "+i4);
+
+                                    dataArrIndex++;
+
+                                    ////////EDIT GRAPHICS
+
+                                    if (dataArrIndex%7==0) {
+                                        series1.appendData(new DataPoint(lastX++, i1), true, 10);
+                                        series2.appendData(new DataPoint(lastX++, i2), true, 10);
+                                        series3.appendData(new DataPoint(lastX++, i3), true, 10);
+                                        series4.appendData(new DataPoint(lastX++, i4), true, 10);
+                                        graphIndex++;
+
+                                        if (autoScaleIsOn) {
+                                            viewport1.setMinY(series1.getLowestValueY());
+                                            viewport1.setMaxY(series1.getHighestValueY());
+                                            viewport2.setMinY(series2.getLowestValueY());
+                                            viewport2.setMaxY(series2.getHighestValueY());
+                                            viewport3.setMinY(series3.getLowestValueY());
+                                            viewport3.setMaxY(series3.getHighestValueY());
+                                            viewport4.setMinY(series4.getLowestValueY());
+                                            viewport4.setMaxY(series4.getHighestValueY());
+                                        }
+                                    }
+
                                 }
                             }
                         }
@@ -564,7 +549,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // sleep to slow down addition of entries
                     try {
-                        Thread.sleep(500); // display 30 points &
+                        Thread.sleep(50); // display 30 points &
                     } catch (InterruptedException e) {
                         //manage error...
                         e.printStackTrace();
@@ -572,7 +557,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();
-        //}
     }
 
     @Override
@@ -597,206 +581,18 @@ public class MainActivity extends AppCompatActivity {
     //
     //
 
-    //read thread
+    // stream data + parse thread
     //
     //
     //
-
-    //create new class for read thread
-    private class ReadThread extends Thread {
-        //private final BufferedReader br;
-
-        private ReadThread() {
-            /*
-            BufferedReader tBR = null;
-            try {
-                tBR = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e) {
-                System.out.println("File not Found");
-            }
-            br = tBR;
-            */
-        }
-
-        public void run() {
-            while(true)
-            {
-                if (startReading) {
-
-                    try {
-                        Thread.sleep(90);
-                    } catch (InterruptedException e) {
-                        //manage error...
-                        e.printStackTrace();
-                    }
-
-                    //System.out.println("Reading");
-
-                    bigStringIndex += 2;
-                    String s1 = bigString.substring(bigStringIndex, bigStringIndex + 5);
-                    bigStringIndex += 7;
-                    String s2 = bigString.substring(bigStringIndex, bigStringIndex + 5);
-                    bigStringIndex += 7;
-                    String s3 = bigString.substring(bigStringIndex, bigStringIndex + 5);
-                    bigStringIndex += 7;
-                    String s4 = bigString.substring(bigStringIndex, bigStringIndex + 5);
-                    bigStringIndex += 7;
-                    String s5 = bigString.substring(bigStringIndex, bigStringIndex + 5);
-                    bigStringIndex += 7;
-
-                    dataArr[0][dataArrIndex] = Integer.parseInt(s1);
-                    dataArr[1][dataArrIndex] = Integer.parseInt(s2);
-                    dataArr[2][dataArrIndex] = Integer.parseInt(s3);
-                    dataArr[3][dataArrIndex] = Integer.parseInt(s4);
-
-                    int i1 = dataArr[0][dataArrIndex];
-                    int i2 = dataArr[1][dataArrIndex];
-                    int i3 = dataArr[2][dataArrIndex];
-                    int i4 = dataArr[3][dataArrIndex];
-
-                    //System.out.println(dataArrIndex+": "+i1 + ", " + i2 + ", " + i3 + ", " + i4 + ", " + s5);
-
-                    dataArrIndex++;
-
-                    //instantiate data array
-                    //dataArr[0][dataArrIndex] = v1;
-
-                }
-                /*
-                try {
-                    if (isStreaming) {
-
-
-                        try {
-
-                            System.out.println(br.read());
-
-                        } finally {
-                            br.close();
-                        }
-
-
-                        FileInputStream fis = new FileInputStream(file);
-                        try {
-                            System.out.println(fis.read());
-                        } finally {
-                            fis.close();
-                        }
-                        // sleep to slow down process
-                        try {
-                            Thread.sleep(250);
-                        } catch (InterruptedException e) {
-                            //manage error...
-                            e.printStackTrace();
-                        }
-                    }
-                } catch (IOException e){
-                    System.out.println("Read file not found");
-                }
-                */
-            }
-        }
-    }
-
-    // stream data thread
-    //
-    //
-    //
-
-    //create new class for connect thread
-    private class ConnectedThread extends Thread {
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-
-        //creation of the connect thread
-        public ConnectedThread(BluetoothSocket socket) {
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-
-            try {
-                //Create I/O streams for connection
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-            } catch (IOException e) { }
-
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-        }
-
-        int count = 1;
-
-        public void run() {
-            byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
-            int bytes;
-
-            while (true) {
-                if(isStreaming) {
-                    try {
-                        bytes = mmInStream.read(buffer);
-
-                        String readMessage = new String(buffer, 0, bytes);
-                        bigString = bigString.concat(readMessage);
-
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            //manage error...
-                            e.printStackTrace();
-                        }
-
-                    } catch (IOException e) {
-                        break;
-                    }
-                }
-            }
-            /*
-            try {
-                FileOutputStream stream = new FileOutputStream(file);
-
-                // Keep looping to listen for received messages
-                while (true) {
-                    try {
-                        bytes = mmInStream.read(buffer);            //read bytes from input buffer
-
-                        String readMessage = new String(buffer, 0, bytes);
-
-                        //
-                        // IMPLEMENT HANDLER LATER
-                        //
-                        // Send the obtained bytes to the UI Activity via handler
-                        //bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
-
-                        //bigString.concat(readMessage);
-
-                        //write to file
-                        //
-                        //
-                        try {
-                            //stream.write(bytes);
-                            //System.out.println(readMessage);
-                        } finally {
-                            stream.close();
-                        }
-                    } catch (IOException e) {
-                        break;
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                System.out.println("Write File Not Found");
-            }
-            */
-        }
-        //write method
-        public void write(String input) {
-            byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
-            try {
-                mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
-            } catch (IOException e) {
-                //if you cannot write, close the application
-                Toast.makeText(getBaseContext(), "Connection Failure", Toast.LENGTH_LONG).show();
-                finish();
-
-            }
+    public static void write(String input) {
+        byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
+        try {
+            mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
+            System.out.println("wrote "+input);
+        } catch (IOException e) {
+            //if you cannot write, close the application
+            System.out.println("Didn't Write");
         }
     }
 
