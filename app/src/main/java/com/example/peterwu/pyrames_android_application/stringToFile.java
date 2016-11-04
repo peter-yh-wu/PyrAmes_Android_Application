@@ -1,7 +1,17 @@
+package com.example.peterwu.pyrames_android_application;
+
+import android.os.Environment;
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 public class stringToFile
 {
-    File path; 
-    String directory = /**/; // PUT File Name(with directory) HERE
+    File path;
+    String directory = ""/**/; // PUT File Name(with directory) HERE
     
     public stringToFile()
     {
@@ -9,7 +19,7 @@ public class stringToFile
             Environment.getExternalStoragePublicDirectory
             (
                 //Environment.DIRECTORY_PICTURES
-                Environment.DIRECTORY_DCIM + "";
+                Environment.DIRECTORY_DCIM + ""
             );
     }
     public void writeToFile(String data)
