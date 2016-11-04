@@ -4,10 +4,14 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,6 +47,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+//user: pyramesapp
 //pass: pyrames123
 //autoscaling
 
@@ -50,17 +55,16 @@ public class MainActivity extends AppCompatActivity {
 
     BluetoothAdapter bluetooth;
 
-    //DELETE
-    private int lastX = 0;
+    //Viewport variables
+    //
+    private int lastX = 0; //count for index of new points added to viewports
 
     private LineGraphSeries<DataPoint> series1;
     private LineGraphSeries<DataPoint> series2;
     private LineGraphSeries<DataPoint> series3;
     private LineGraphSeries<DataPoint> series4;
 
-    //Viewport variables
-    //
-    int minX = 0; int maxX = 30;
+    int minX = 0; int maxX = 50;
     int yRange = 1500;
     int minY1 = 8500; int maxY1 = minY1+yRange;
     int minY2 = 9000; int maxY2 = minY2+yRange;
@@ -117,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         ref2.setValue(r2);
         ref3.setValue(r3);
         ref4.setValue(r4);
+
+        //PUT FILE STUFF HERE
+        //
+
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,13 +314,16 @@ public class MainActivity extends AppCompatActivity {
         buttonAutoScale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String btnText = (String)buttonAutoScale.getText();
-                if(btnText.equals("Auto-Scale Is Off")) {
-                    buttonAutoScale.setText("Auto-Scale Is On");
+                //Drawable btnText = buttonAutoScale.getBackground();
+                ColorDrawable buttonColor = (ColorDrawable) buttonAutoScale.getBackground();
+                if(buttonColor.getColor() == 0xffffb6c1) {
+                    //buttonAutoScale.setText("Auto-Scale Is On");
+                    buttonAutoScale.setBackgroundColor(Color.GREEN);
                     setAutoScalingOn();
                 }
                 else {
-                    buttonAutoScale.setText("Auto-Scale Is Off");
+                    //buttonAutoScale.setText("Auto-Scale Is Off");
+                    buttonAutoScale.setBackgroundColor(0xffffb6c1);
                     setAutoScalingOff();
                 }
             }
@@ -360,6 +371,9 @@ public class MainActivity extends AppCompatActivity {
 
         //System.out.println("Resuming Main Activity");
 
+        isStreaming = false;
+        startReading = false;
+
         //
         // streams data if device is connected
         //
@@ -373,8 +387,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(device==null)
+        if(device==null) {
             System.out.println("Device null");
+        }
         else
             System.out.println("address: "+device.getAddress());
 
@@ -440,15 +455,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //------------
-        // graphing data thread
-        // graph thread, display thread
-        //
-        //
-
         new Thread(new Runnable() {
             byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
             int bytes;
+            int vpYBuffer = 250;
 
             @Override
             public void run() {
@@ -523,22 +533,22 @@ public class MainActivity extends AppCompatActivity {
 
                                     ////////EDIT GRAPHICS
 
-                                    if (dataArrIndex%7==0) {
-                                        series1.appendData(new DataPoint(lastX++, i1), true, 10);
-                                        series2.appendData(new DataPoint(lastX++, i2), true, 10);
-                                        series3.appendData(new DataPoint(lastX++, i3), true, 10);
-                                        series4.appendData(new DataPoint(lastX++, i4), true, 10);
+                                    if (dataArrIndex%2==0) {
+                                        series1.appendData(new DataPoint(lastX++, i1), true, maxX);
+                                        series2.appendData(new DataPoint(lastX++, i2), true, maxX);
+                                        series3.appendData(new DataPoint(lastX++, i3), true, maxX);
+                                        series4.appendData(new DataPoint(lastX++, i4), true, maxX);
                                         graphIndex++;
 
-                                        if (autoScaleIsOn) {
-                                            viewport1.setMinY(series1.getLowestValueY());
-                                            viewport1.setMaxY(series1.getHighestValueY());
-                                            viewport2.setMinY(series2.getLowestValueY());
-                                            viewport2.setMaxY(series2.getHighestValueY());
-                                            viewport3.setMinY(series3.getLowestValueY());
-                                            viewport3.setMaxY(series3.getHighestValueY());
-                                            viewport4.setMinY(series4.getLowestValueY());
-                                            viewport4.setMaxY(series4.getHighestValueY());
+                                        if (autoScaleIsOn&&dataArrIndex%(25)==0) {
+                                            viewport1.setMinY(series1.getLowestValueY()-vpYBuffer);
+                                            viewport1.setMaxY(series1.getHighestValueY()+vpYBuffer);
+                                            viewport2.setMinY(series2.getLowestValueY()-vpYBuffer);
+                                            viewport2.setMaxY(series2.getHighestValueY()+vpYBuffer);
+                                            viewport3.setMinY(series3.getLowestValueY()-vpYBuffer);
+                                            viewport3.setMaxY(series3.getHighestValueY()+vpYBuffer);
+                                            viewport4.setMinY(series4.getLowestValueY()-vpYBuffer);
+                                            viewport4.setMaxY(series4.getHighestValueY()+vpYBuffer);
                                         }
                                     }
 

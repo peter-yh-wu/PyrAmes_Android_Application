@@ -136,7 +136,8 @@
                 android:id="@+id/buttonAutoScale"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Auto-Scale Is Off"/>
+                android:text="AutoScale"
+                android:background="#ffffb6c1"/>
 
             <Button
                 android:id="@+id/buttonUpload"
