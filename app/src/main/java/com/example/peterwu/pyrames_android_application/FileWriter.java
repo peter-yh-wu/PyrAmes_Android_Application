@@ -1,5 +1,6 @@
 package com.example.peterwu.pyrames_android_application;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -8,19 +9,35 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class stringToFile
+
+/**
+ *
+ * "Save a File on Internal Storage"
+ * https://developer.android.com/training/basics/data-storage/files.html
+ *
+ * http://stackoverflow.com/questions/14376807/how-to-read-write-string-from-a-file-in-android
+ */
+public class FileWriter
 {
     File path;
-    String directory = ""/**/; // PUT File Name(with directory) HERE
-    
-    public stringToFile()
+    String filename = "config.txt";
+    //String directory = ""/**/; // PUT File Name(with directory) HERE
+
+    /**
+     *
+     * @param context
+     */
+    public FileWriter(Context context)
     {
+        /*
         path =
             Environment.getExternalStoragePublicDirectory
             (
                 //Environment.DIRECTORY_PICTURES
                 Environment.DIRECTORY_DCIM + ""
             );
+            */
+        path = context.getFilesDir();
     }
     public void writeToFile(String data)
     {
@@ -34,7 +51,7 @@ public class stringToFile
             path.mkdirs();
         }
 
-        final File file = new File(path, "config.txt");
+        final File file = new File(path, filename);
 
         // Save your stream, don't forget to flush() it before closing it.
 

@@ -50,6 +50,9 @@ import java.util.concurrent.TimeUnit;
 //user: pyramesapp
 //pass: pyrames123
 //autoscaling
+//set-up
+//ability to turn on/off graphs
+//data uploading
 
 public class MainActivity extends AppCompatActivity {
 
