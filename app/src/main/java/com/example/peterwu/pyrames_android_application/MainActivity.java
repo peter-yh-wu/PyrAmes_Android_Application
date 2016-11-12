@@ -76,8 +76,11 @@ public class MainActivity extends AppCompatActivity {
 
     //For Firebase
     //
-    DatabaseReference mRootRef;
-    DatabaseReference ref1, ref2, ref3, ref4;
+    //DatabaseReference mRootRef;
+    //DatabaseReference ref1, ref2, ref3, ref4;
+
+    //StorageReference storageRef;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void upload()
     {
+        /*
         ArrayList<Integer> r1 = new ArrayList<Integer>();
         ArrayList<Integer> r2= new ArrayList<Integer>();
         ArrayList<Integer> r3= new ArrayList<Integer>();
@@ -124,10 +128,15 @@ public class MainActivity extends AppCompatActivity {
         ref2.setValue(r2);
         ref3.setValue(r3);
         ref4.setValue(r4);
+        */
 
         //PUT FILE STUFF HERE
         //
 
+        MyFileWriter fileWriter = new MyFileWriter(getApplicationContext());
+        fileWriter.writeToFile(bigString);
+        String testString = fileWriter.readFromFile();
+        System.out.println(testString);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,18 +144,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //android.os.Debug.waitForDebugger();
-
         //Firebase Code
         //
         //
         //
         Firebase.setAndroidContext(this);
+        /*
         mRootRef = FirebaseDatabase.getInstance().getReference();
         ref1 = mRootRef.child("channel_1");
         ref2 = mRootRef.child("channel_2");
         ref3 = mRootRef.child("channel_3");
         ref4 = mRootRef.child("channel_4");
+        */
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -534,8 +543,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     dataArrIndex++;
 
-                                    ////////EDIT GRAPHICS
-
+                                    //Auto-scale, autoscale
                                     if (dataArrIndex%2==0) {
                                         series1.appendData(new DataPoint(lastX++, i1), true, maxX);
                                         series2.appendData(new DataPoint(lastX++, i2), true, maxX);

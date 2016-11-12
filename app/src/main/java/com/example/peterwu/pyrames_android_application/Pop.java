@@ -38,7 +38,6 @@ public class Pop extends Activity {
     ArrayList<BluetoothDevice> arrayListBluetoothDevices = null;
     BluetoothDevice btDevice;
 
-    ArrayAdapter mArrayAdapter;
     private static BluetoothDevice device = null;
 
     @Override
@@ -73,35 +72,6 @@ public class Pop extends Activity {
         startSearching(); //starts searching in onCreate
         arrayListBluetoothDevices.clear();
 
-        /*
-        mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-
-        if (bluetooth != null) {
-            System.out.println("pop-up bluetooth isn't null");
-
-            String status;
-
-            String mydeviceaddress = bluetooth.getAddress();
-            //String mydevicename = bluetooth.getName();
-            status = mydeviceaddress;
-            System.out.println(status);
-
-            //ListView
-            ListView listView = (ListView) findViewById(R.id.lvItems);
-            listView.setAdapter(mArrayAdapter);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String str = (String)parent.getItemAtPosition(position);
-                    System.out.println("Clicked: "+str);
-
-                    device = bluetooth.getRemoteDevice(str);
-                    //pairDevice(bluetooth.getRemoteDevice(str));
-                }
-            });
-        }
-        */
     }
 
     @Override
@@ -247,16 +217,4 @@ public class Pop extends Activity {
         return device;
     }
 
-    //WHEN IS CONNECT METHOD USED?
-    //...
-    private Boolean connect(BluetoothDevice device) {
-        Boolean bool = false;
-        try {
-            Method method = device.getClass().getMethod("createBond", (Class[]) null);
-            method.invoke(device, (Object[]) null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bool;
-    }
 }

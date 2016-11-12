@@ -4,9 +4,13 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 
@@ -17,8 +21,9 @@ import java.io.OutputStreamWriter;
  *
  * http://stackoverflow.com/questions/14376807/how-to-read-write-string-from-a-file-in-android
  */
-public class FileWriter
+public class MyFileWriter
 {
+    Context context;
     File path;
     String filename = "config.txt";
     //String directory = ""/**/; // PUT File Name(with directory) HERE
@@ -27,7 +32,7 @@ public class FileWriter
      *
      * @param context
      */
-    public FileWriter(Context context)
+    public MyFileWriter(Context context)
     {
         /*
         path =
@@ -37,12 +42,12 @@ public class FileWriter
                 Environment.DIRECTORY_DCIM + ""
             );
             */
+        this.context = context;
         path = context.getFilesDir();
     }
     public void writeToFile(String data)
     {
-        // Get the directory for the user's public pictures directory.
-
+        // Get the directory
 
         // Make sure the path directory exists.
         if(!path.exists())
@@ -71,5 +76,35 @@ public class FileWriter
         {
             Log.e("Exception", "File write failed: " + e.toString());
         } 
+    }
+
+    public String readFromFile() {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput(filename);
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 }
