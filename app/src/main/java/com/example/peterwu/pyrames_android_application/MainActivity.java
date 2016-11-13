@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,8 +25,13 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 //import com.google.firebase.database.DatabaseReference;
 //import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
@@ -137,6 +143,39 @@ public class MainActivity extends AppCompatActivity {
         fileWriter.writeToFile(bigString);
         String testString = fileWriter.readFromFile();
         System.out.println(testString);
+
+
+        // Create a storage reference from our app
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        //StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://pyrames-ca318.appspot.com");
+        //StorageReference testRef = storageRef.child("test/test.txt");
+        //System.out.println(testRef.getPath());
+        //StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("test/config.txt");
+        File uploader = new File(fileWriter.getPath(), fileWriter.getFilename());
+        System.out.println(uploader.getPath());
+        Uri file = Uri.fromFile(uploader);
+        UploadTask uploadTask;
+        byte[] testBA = "Any String you want".getBytes();
+        uploadTask = storageRef.putBytes(testBA);
+        //UploadTask uploadTask = storageRef.putFile(file);
+
+        /*
+        UploadTask uploadTask = storageRef.putFile(file);
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        });
+        */
     }
 
     protected void onCreate(Bundle savedInstanceState) {

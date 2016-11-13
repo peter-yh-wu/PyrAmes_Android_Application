@@ -78,6 +78,18 @@ public class MyFileWriter
         } 
     }
 
+    /**
+     *
+     * @return
+     */
+    public File getPath() {
+        return path;
+    }
+
+    public String getFilename(){
+        return filename;
+    }
+
     public String readFromFile() {
 
         String ret = "";
