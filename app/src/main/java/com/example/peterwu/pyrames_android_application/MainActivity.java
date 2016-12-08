@@ -29,15 +29,6 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-//import com.google.firebase.database.DatabaseReference;
-//import com.google.firebase.database.FirebaseDatabase;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
@@ -79,7 +70,7 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //ability to turn on/off graphs
 //data uploading
 
-
+// disable bluetooth to begin testing google drive
 // -> handling Google Drive intents - https://developers.google.com/drive/android/java-client#set_mime_types_in_the_app_manifest
 // ~open quickstart
 // ~https://console.developers.google.com/apis/credentials?project=pyrames-ca318
@@ -109,13 +100,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     int minY2 = 9000; int maxY2 = minY2+yRange;
     int minY3 = 11500; int maxY3 = minY3+yRange;
     int minY4 = 10500; int maxY4 = minY4+yRange;
-
-    //For Firebase
-    //
-    //DatabaseReference mRootRef;
-    //DatabaseReference ref1, ref2, ref3, ref4;
-
-    //StorageReference storageRef;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -175,59 +159,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String testString = fileWriter.readFromFile();
         System.out.println(testString);
 
-        /*
-        // Create a storage reference from our app
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        //StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://pyrames-ca318.appspot.com");
-        //StorageReference testRef = storageRef.child("test/test.txt");
-        //System.out.println(testRef.getPath());
-        //StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("test/config.txt");
-        File uploader = new File(fileWriter.getPath(), fileWriter.getFilename());
-        System.out.println(uploader.getPath());
-        Uri file = Uri.fromFile(uploader);
-        UploadTask uploadTask;
-        byte[] testBA = "Any String you want".getBytes();
-        uploadTask = storageRef.putBytes(testBA); //DOESN"T WORK FOR SOME REASON
-        */
 
-        //UploadTask uploadTask = storageRef.putFile(file);
-
-        /*
-        UploadTask uploadTask = storageRef.putFile(file);
-        // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-            }
-        });
-        */
     }
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Firebase Code
-        //
-        //
-        //
-        Firebase.setAndroidContext(this);
-        /*
-        mRootRef = FirebaseDatabase.getInstance().getReference();
-        ref1 = mRootRef.child("channel_1");
-        ref2 = mRootRef.child("channel_2");
-        ref3 = mRootRef.child("channel_3");
-        ref4 = mRootRef.child("channel_4");
-        */
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
