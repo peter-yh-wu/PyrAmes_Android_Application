@@ -73,11 +73,18 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 //user: pyramesapp
 //pass: pyrames123
+//pyramesca318
 //autoscaling
 //set-up
 //ability to turn on/off graphs
 //data uploading
 
+
+// -> handling Google Drive intents - https://developers.google.com/drive/android/java-client#set_mime_types_in_the_app_manifest
+// ~open quickstart
+// ~https://console.developers.google.com/apis/credentials?project=pyrames-ca318
+// https://developers.google.com/drive/android/auth#generate_the_signing_certificate_fingerprint_and_register_your_application
+// ~https://github.com/googledrive/android-quickstart#what-does-it-do
 
 //https://github.com/googledrive/android-quickstart/blob/master/app/src/main/java/com/google/android/gms/drive/sample/quickstart/MainActivity.java#L157
 //https://developers.google.com/drive/android/auth
@@ -168,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         String testString = fileWriter.readFromFile();
         System.out.println(testString);
 
-
+        /*
         // Create a storage reference from our app
         FirebaseStorage storage = FirebaseStorage.getInstance();
         //StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -182,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         UploadTask uploadTask;
         byte[] testBA = "Any String you want".getBytes();
         uploadTask = storageRef.putBytes(testBA); //DOESN"T WORK FOR SOME REASON
+        */
 
         //UploadTask uploadTask = storageRef.putFile(file);
 
