@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
+    static TextView textViewBattery;
+
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -259,6 +261,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         viewport4.setXAxisBoundsManual(true);
         viewport4.setMinX(minX);
         viewport4.setMaxX(maxX);
+
+        //Battery Life Text View
+        //
+        //
+        textViewBattery = (TextView) findViewById(R.id.textViewBattery);
 
         //Buttons
         //
@@ -454,12 +461,48 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
 
+        //Display sensor battery life
+        //
+        // Write "B"
+        //
+        textViewBattery.setText("Checking Battery Life");
+        /*
+        MainActivity.write("B");
+        try {
+            byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
+            int bytes;
+            bytes = mmInStream.read(buffer);
+
+            String readMessage = new String(buffer, 0, bytes);
+            System.out.println("Battery Life: "+readMessage);
+        }
+        catch (IOException e) {
+            System.out.println("Can't read mmInStream");
+        }
+        */
+
         final Button buttonStream = (Button) findViewById(R.id.buttonStream);
         buttonStream.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String btnText = (String) buttonStream.getText();
                 if (btnText.equals("Stream")) {
+                    //Display sensor battery life
+                    /*
+                    MainActivity.write("Z");
+                    try {
+                        byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
+                        int bytes;
+                        bytes = mmInStream.read(buffer);
+
+                        String readMessage = new String(buffer, 0, bytes);
+                        System.out.println("Battery Life: "+readMessage);
+                    }
+                    catch (IOException e) {
+                        System.out.println("Can't read mmInStream");
+                    }
+                    */
+
                     //mConnectedThread.write("Y");
                     MainActivity.write("Y");
                     buttonStream.setText("Stop");
