@@ -140,10 +140,10 @@
                 android:text="Stream"/>
 
             <Button
-                android:id="@+id/buttonAutoScale"
+                android:id="@+id/buttonGraphs"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="AutoScale"
+                android:text="Graphs"
                 android:background="#ffffb6c1"/>
 
             <Button

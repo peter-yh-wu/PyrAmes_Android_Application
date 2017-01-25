@@ -163,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     static TextView textViewBattery;
 
+    static boolean displayingGraphs = false;
+
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -343,20 +345,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
         //Auto-scale button
-        final Button buttonAutoScale = (Button) findViewById(R.id.buttonAutoScale);
-        buttonAutoScale.setOnClickListener(new View.OnClickListener() {
+        final Button buttonGraphs = (Button) findViewById(R.id.buttonGraphs);
+        buttonGraphs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Drawable btnText = buttonAutoScale.getBackground();
-                ColorDrawable buttonColor = (ColorDrawable) buttonAutoScale.getBackground();
+                //Drawable btnText = buttonGraphs.getBackground();
+                ColorDrawable buttonColor = (ColorDrawable) buttonGraphs.getBackground();
                 if(buttonColor.getColor() == 0xffffb6c1) {
-                    //buttonAutoScale.setText("Auto-Scale Is On");
-                    buttonAutoScale.setBackgroundColor(Color.GREEN);
+                    //buttonGraphs.setText("Auto-Scale Is On");
+                    buttonGraphs.setBackgroundColor(Color.GREEN);
+                    displayingGraphs = true;
                     setAutoScalingOn();
                 }
                 else {
-                    //buttonAutoScale.setText("Auto-Scale Is Off");
-                    buttonAutoScale.setBackgroundColor(0xffffb6c1);
+                    //buttonGraphs.setText("Auto-Scale Is Off");
+                    buttonGraphs.setBackgroundColor(0xffffb6c1);
+                    displayingGraphs = false;
                     setAutoScalingOff();
                 }
             }
@@ -406,6 +410,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         isStreaming = false;
         startReading = false;
+
+        displayingGraphs = false;
 
         //
         // streams data if device is connected
@@ -461,25 +467,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
 
-        //Display sensor battery life
-        //
-        // Write "B"
-        //
-        textViewBattery.setText("Checking Battery Life");
-        /*
-        MainActivity.write("B");
-        try {
-            byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
-            int bytes;
-            bytes = mmInStream.read(buffer);
-
-            String readMessage = new String(buffer, 0, bytes);
-            System.out.println("Battery Life: "+readMessage);
-        }
-        catch (IOException e) {
-            System.out.println("Can't read mmInStream");
-        }
-        */
+        //"write" method starts working from this point onwards
 
         final Button buttonStream = (Button) findViewById(R.id.buttonStream);
         buttonStream.setOnClickListener(new View.OnClickListener() {
@@ -487,21 +475,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View v) {
                 String btnText = (String) buttonStream.getText();
                 if (btnText.equals("Stream")) {
-                    //Display sensor battery life
-                    /*
-                    MainActivity.write("Z");
-                    try {
-                        byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
-                        int bytes;
-                        bytes = mmInStream.read(buffer);
-
-                        String readMessage = new String(buffer, 0, bytes);
-                        System.out.println("Battery Life: "+readMessage);
-                    }
-                    catch (IOException e) {
-                        System.out.println("Can't read mmInStream");
-                    }
-                    */
 
                     //mConnectedThread.write("Y");
                     MainActivity.write("Y");
@@ -583,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                     bigStringIndex += 7;
                                     String s4 = bigString.substring(bigStringIndex, bigStringIndex + 5);
                                     bigStringIndex += 7;
-                                    String s5 = bigString.substring(bigStringIndex, bigStringIndex + 5);
+                                    //String s5 = bigString.substring(bigStringIndex, bigStringIndex + 5); //not used, blank space
                                     bigStringIndex += 7;
 
                                     dataArr[0][dataArrIndex] = Integer.parseInt(s1);
@@ -601,25 +574,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                     dataArrIndex++;
 
                                     //Auto-scale, autoscale
-                                    if (dataArrIndex%2==0) {
-                                        series1.appendData(new DataPoint(lastX++, i1), true, maxX);
-                                        series2.appendData(new DataPoint(lastX++, i2), true, maxX);
-                                        series3.appendData(new DataPoint(lastX++, i3), true, maxX);
-                                        series4.appendData(new DataPoint(lastX++, i4), true, maxX);
-                                        graphIndex++;
+                                    if(displayingGraphs) {
+                                        if (dataArrIndex % 2 == 0) {
+                                            series1.appendData(new DataPoint(lastX++, i1), true, maxX);
+                                            series2.appendData(new DataPoint(lastX++, i2), true, maxX);
+                                            series3.appendData(new DataPoint(lastX++, i3), true, maxX);
+                                            series4.appendData(new DataPoint(lastX++, i4), true, maxX);
+                                            graphIndex++;
 
-                                        if (autoScaleIsOn&&dataArrIndex%(25)==0) {
-                                            viewport1.setMinY(series1.getLowestValueY()-vpYBuffer);
-                                            viewport1.setMaxY(series1.getHighestValueY()+vpYBuffer);
-                                            viewport2.setMinY(series2.getLowestValueY()-vpYBuffer);
-                                            viewport2.setMaxY(series2.getHighestValueY()+vpYBuffer);
-                                            viewport3.setMinY(series3.getLowestValueY()-vpYBuffer);
-                                            viewport3.setMaxY(series3.getHighestValueY()+vpYBuffer);
-                                            viewport4.setMinY(series4.getLowestValueY()-vpYBuffer);
-                                            viewport4.setMaxY(series4.getHighestValueY()+vpYBuffer);
+                                            if (autoScaleIsOn && dataArrIndex % (25) == 0) {
+                                                viewport1.setMinY(series1.getLowestValueY() - vpYBuffer);
+                                                viewport1.setMaxY(series1.getHighestValueY() + vpYBuffer);
+                                                viewport2.setMinY(series2.getLowestValueY() - vpYBuffer);
+                                                viewport2.setMaxY(series2.getHighestValueY() + vpYBuffer);
+                                                viewport3.setMinY(series3.getLowestValueY() - vpYBuffer);
+                                                viewport3.setMaxY(series3.getHighestValueY() + vpYBuffer);
+                                                viewport4.setMinY(series4.getLowestValueY() - vpYBuffer);
+                                                viewport4.setMaxY(series4.getHighestValueY() + vpYBuffer);
+                                            }
                                         }
                                     }
-
                                 }
                             }
                         }
