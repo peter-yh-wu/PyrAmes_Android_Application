@@ -61,6 +61,9 @@ import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.DriveContentsResult;
 import com.google.android.gms.drive.MetadataChangeSet;
 //import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+//import com.google.api.services.drive.Drive;
+
+
 //user: pyramesapp
 //pass: pyrames123
 //pyramesca318
@@ -152,12 +155,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         //PUT FILE STUFF HERE
         //
+        //CHANGE BIGSTRING TO A MORE READABLE STRING
+        //
+
+        String str;
+        //str = bigString;
+        str = "Pressed Upload"; //DELETE
 
         MyFileWriter fileWriter = new MyFileWriter(getApplicationContext());
-        fileWriter.writeToFile(bigString);
+        fileWriter.writeToFile(str);
         String testString = fileWriter.readFromFile();
         System.out.println(testString);
 
+        //
+        //
+        //DRIVE STUFF
+        //
+        /*
+        Log.i(TAG, "API client connected.");
+        */
+        if (mBitmapToSave == null) {
+            // This activity has no UI of its own. Just start the camera.
+            startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+                    REQUEST_CODE_CAPTURE_IMAGE);
+            return;
+        }
+        saveFileToDrive();
 
     }
 
@@ -718,8 +741,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     mBitmapToSave = null;
 
                     // Just start the camera again for another photo.
-                    startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                            REQUEST_CODE_CAPTURE_IMAGE);
+                    //startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+                    //        REQUEST_CODE_CAPTURE_IMAGE);
                 }
                 break;
         }
@@ -728,6 +751,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "API client connected.");
+
         if (mBitmapToSave == null) {
             // This activity has no UI of its own. Just start the camera.
             startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
@@ -735,6 +759,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return;
         }
         saveFileToDrive();
+
     }
 
     @Override
@@ -742,14 +767,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.i(TAG, "GoogleApiClient connection suspended");
     }
 
-    private static final String TAG = "drive-quickstart";
+    private static final String TAG = "drive";
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 1;
     private static final int REQUEST_CODE_CREATOR = 2;
     private static final int REQUEST_CODE_RESOLUTION = 3;
 
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
-// Called whenever the API client fails to connect.
+        // Called whenever the API client fails to connect.
         Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
             // show the localized error dialog.
@@ -758,16 +784,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         // The failure has a resolution. Resolve it.
         // Called typically when the app is not yet authorized, and an
-        // authorization
-        // dialog is displayed to the user.
+        // authorization dialog is displayed to the user.
         try {
             result.startResolutionForResult(this, REQUEST_CODE_RESOLUTION);
         } catch (IntentSender.SendIntentException e) {
             Log.e(TAG, "Exception while starting resolution activity", e);
         }
     }
-
-
 
     private void saveFileToDrive() {
         // Start by creating a new contents, and setting a callback.
