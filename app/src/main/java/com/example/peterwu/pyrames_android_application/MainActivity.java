@@ -71,8 +71,6 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //pyramesca318
 //autoscaling
 //set-up
-//ability to turn on/off graphs
-//data uploading
 
 // disable bluetooth to begin testing google drive
 // -> handling Google Drive intents - https://developers.google.com/drive/android/java-client#set_mime_types_in_the_app_manifest
@@ -136,32 +134,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void upload()
     {
-        /*
-        ArrayList<Integer> r1 = new ArrayList<Integer>();
-        ArrayList<Integer> r2= new ArrayList<Integer>();
-        ArrayList<Integer> r3= new ArrayList<Integer>();
-        ArrayList<Integer> r4= new ArrayList<Integer>();
-        for(int i = 0;i < dataArr[0].length;i++)
-        {
-            r1.add(dataArr[0][i]);
-            r2.add(dataArr[1][i]);
-            r3.add(dataArr[2][i]);
-            r4.add(dataArr[3][i]);
-        }
-        //System.out.println(r1);
-        ref1.setValue(r1);
-        ref2.setValue(r2);
-        ref3.setValue(r3);
-        ref4.setValue(r4);
-        */
-
-        //PUT FILE STUFF HERE
-        //
-        //CHANGE BIGSTRING TO A MORE READABLE STRING
-        //
-
         String str;
-        //str = bigString;
         str = "Pressed Upload"; //DELETE
 
         MyFileWriter fileWriter = new MyFileWriter(getApplicationContext());
@@ -176,13 +149,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         /*
         Log.i(TAG, "API client connected.");
         */
+        /*
         if (mBitmapToSave == null) {
             // This activity has no UI of its own. Just start the camera.
             startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
                     REQUEST_CODE_CAPTURE_IMAGE);
             return;
         }
-        saveImageToDrive();
+        */
+        saveFileToDrive();
 
     }
 
@@ -789,24 +764,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void saveFileToDrive() {
-        Log.i(TAG, "Creating new file contents.");
-        Drive.DriveApi.newDriveContents(googleclient)
-                .setResultCallback(new ResultCallback<DriveContentsResult>() {
-
-                    @Override
-                    public void onResult(DriveContentsResult result) {
-                        if (!result.getStatus().isSuccess()) {
-                            Log.i(TAG, "Failed to create new contents.");
-                            return;
-                        }
-                        Log.i(TAG, "New contents created.");
-                        OutputStream outputStream = result.getDriveContents().getOutputStream();
-                        //outputStream writes...
-                    }
-                });
-    }
-
-    private void saveImageToDrive() {
         // Start by creating a new contents, and setting a callback.
         Log.i(TAG, "Creating new contents.");
         //final Bitmap image = mBitmapToSave;
