@@ -40,8 +40,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     REQUEST_CODE_CAPTURE_IMAGE);
             return;
         }
-        saveFileToDrive();
+        saveImageToDrive();
 
     }
 
@@ -737,7 +739,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case REQUEST_CODE_CREATOR:
                 // Called after a file is saved to Drive.
                 if (resultCode == RESULT_OK) {
-                    Log.i(TAG, "Image successfully saved.");
+                    Log.i(TAG, "File successfully saved.");
                     mBitmapToSave = null;
 
                     // Just start the camera again for another photo.
@@ -751,15 +753,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "API client connected.");
-
-        if (mBitmapToSave == null) {
-            // This activity has no UI of its own. Just start the camera.
-            startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                    REQUEST_CODE_CAPTURE_IMAGE);
-            return;
-        }
-        saveFileToDrive();
-
+        //moved drive quickstart stuff into upload method
     }
 
     @Override
@@ -774,8 +768,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
     @Override
+    /**
+     * Called whenever the API client fails to connect.
+     */
     public void onConnectionFailed(@NonNull ConnectionResult result) {
-        // Called whenever the API client fails to connect.
         Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
             // show the localized error dialog.
@@ -793,17 +789,33 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void saveFileToDrive() {
-        // Start by creating a new contents, and setting a callback.
-        Log.i(TAG, "Creating new contents.");
-        final Bitmap image = mBitmapToSave;
+        Log.i(TAG, "Creating new file contents.");
         Drive.DriveApi.newDriveContents(googleclient)
                 .setResultCallback(new ResultCallback<DriveContentsResult>() {
 
                     @Override
                     public void onResult(DriveContentsResult result) {
-                        // If the operation was not successful, we cannot do anything
-                        // and must
-                        // fail.
+                        if (!result.getStatus().isSuccess()) {
+                            Log.i(TAG, "Failed to create new contents.");
+                            return;
+                        }
+                        Log.i(TAG, "New contents created.");
+                        OutputStream outputStream = result.getDriveContents().getOutputStream();
+                        //outputStream writes...
+                    }
+                });
+    }
+
+    private void saveImageToDrive() {
+        // Start by creating a new contents, and setting a callback.
+        Log.i(TAG, "Creating new contents.");
+        //final Bitmap image = mBitmapToSave;
+        Drive.DriveApi.newDriveContents(googleclient)
+                .setResultCallback(new ResultCallback<DriveContentsResult>() {
+
+                    @Override
+                    public void onResult(DriveContentsResult result) {
+                        // If the operation was not successful, we cannot do anything and must fail
                         if (!result.getStatus().isSuccess()) {
                             Log.i(TAG, "Failed to create new contents.");
                             return;
@@ -812,18 +824,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         Log.i(TAG, "New contents created.");
                         // Get an output stream for the contents.
                         OutputStream outputStream = result.getDriveContents().getOutputStream();
-                        // Write the bitmap data from it.
-                        ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
-                        image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
+                        // Write the data from it.
+                        byte[] buf = bigString.getBytes();
                         try {
-                            outputStream.write(bitmapStream.toByteArray());
+                            outputStream.write(buf);
                         } catch (IOException e1) {
                             Log.i(TAG, "Unable to write file contents.");
                         }
                         // Create the initial metadata - MIME type and title.
                         // Note that the user will be able to change the title later.
+                        //NEW: (IN PROGRESS)
+                        String fileName = DateFormat.getDateTimeInstance().format(new Date());
+                        String fileTitle = fileName+".txt";
                         MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-                                .setMimeType("image/jpeg").setTitle("Android Photo.png").build();
+                                .setMimeType("text/plain").setTitle(fileTitle).build();
+                        //PREVIOUS:
+                        //String fileTitle = fileName+".png";
+                        //MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
+                        //        .setMimeType("image/jpeg").setTitle(fileTitle).build();
+
                         // Create an intent for the file chooser, and start it.
                         IntentSender intentSender = Drive.DriveApi
                                 .newCreateFileActivityBuilder()
