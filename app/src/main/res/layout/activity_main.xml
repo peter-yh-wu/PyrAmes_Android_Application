@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
-            android:text="[pair device to show battery life]"/>
+            android:text=""/>
 
         <LinearLayout
             android:layout_width="wrap_content"

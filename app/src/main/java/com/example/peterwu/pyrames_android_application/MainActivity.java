@@ -72,16 +72,6 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //autoscaling
 //set-up
 
-// disable bluetooth to begin testing google drive
-// -> handling Google Drive intents - https://developers.google.com/drive/android/java-client#set_mime_types_in_the_app_manifest
-// ~open quickstart
-// ~https://console.developers.google.com/apis/credentials?project=pyrames-ca318
-// https://developers.google.com/drive/android/auth#generate_the_signing_certificate_fingerprint_and_register_your_application
-// ~https://github.com/googledrive/android-quickstart#what-does-it-do
-
-//https://github.com/googledrive/android-quickstart/blob/master/app/src/main/java/com/google/android/gms/drive/sample/quickstart/MainActivity.java#L157
-//https://developers.google.com/drive/android/auth
-
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
 
@@ -148,14 +138,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //
         /*
         Log.i(TAG, "API client connected.");
-        */
-        /*
-        if (mBitmapToSave == null) {
-            // This activity has no UI of its own. Just start the camera.
-            startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                    REQUEST_CODE_CAPTURE_IMAGE);
-            return;
-        }
         */
         saveFileToDrive();
 
