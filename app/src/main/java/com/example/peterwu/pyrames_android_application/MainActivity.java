@@ -66,11 +66,11 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //import com.google.api.services.drive.Drive;
 
 
-//mark time stamp for start time
-//wider range for graphing
-//instructions to use app readme.
+//mark time stamp for start time                        //Done
+//wider range for graphing                              //Done
+//instructions to use app readme.                       //Incomplete
 //indication that button pressed
-//download app to device //'build apk', 'sideloading'
+//download app to device //'build apk', 'sideloading'   //Incomplete
 
 //user: pyramesapp
 //pass: pyrames123
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private LineGraphSeries<DataPoint> series3;
     private LineGraphSeries<DataPoint> series4;
 
-    int minX = 0; int maxX = 50;
+    int minX = 0; int maxX = 100;
     int yRange = 1500;
     int minY1 = 8500; int maxY1 = minY1+yRange;
     int minY2 = 9000; int maxY2 = minY2+yRange;
@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     int yIncrement = 100;
 
+    String startTime;
+
     //viewports
     //
     Viewport viewport1 = null; Viewport viewport2 = null; Viewport viewport3 = null; Viewport viewport4 = null;
@@ -130,14 +132,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void upload()
     {
-        String str;
-        str = "Pressed Upload"; //DELETE
-
-        MyFileWriter fileWriter = new MyFileWriter(getApplicationContext());
-        fileWriter.writeToFile(str);
-        String testString = fileWriter.readFromFile();
-        System.out.println(testString);
-
         //
         //
         //DRIVE STUFF
@@ -145,6 +139,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         /*
         Log.i(TAG, "API client connected.");
         */
+        client.connect();
+        googleclient.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+
         saveFileToDrive();
 
     }
@@ -393,6 +391,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     MainActivity.write("Y");
                     buttonStream.setText("Stop");
                     isStreaming = true;
+                    startTime = DateFormat.getDateTimeInstance().format(new Date());
+                    bigString = "";
+                    bigStringIndex = 0;
                     /*
                     try {
                         TimeUnit.MILLISECONDS.sleep(200);
@@ -695,7 +696,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         // Get an output stream for the contents.
                         OutputStream outputStream = result.getDriveContents().getOutputStream();
                         // Write the data from it.
-                        byte[] buf = bigString.getBytes();
+                        //byte[] buf = bigString.getBytes();
+                        String newString = startTime+"\n"+bigString;
+                        byte[] buf = newString.getBytes();
                         try {
                             outputStream.write(buf);
                         } catch (IOException e1) {
