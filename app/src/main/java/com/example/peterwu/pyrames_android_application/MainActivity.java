@@ -66,6 +66,12 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //import com.google.api.services.drive.Drive;
 
 
+//mark time stamp for start time
+//wider range for graphing
+//instructions to use app readme.
+//indication that button pressed
+//download app to device //'build apk', 'sideloading'
+
 //user: pyramesapp
 //pass: pyrames123
 //pyramesca318
