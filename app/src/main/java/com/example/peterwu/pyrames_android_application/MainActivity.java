@@ -69,7 +69,7 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //mark time stamp for start time                        //Done
 //wider range for graphing                              //Done
 //instructions to use app readme.                       //Incomplete
-//indication that button pressed
+//indication that button pressed                        //Eh, Incomplete
 //download app to device //'build apk', 'sideloading'   //Incomplete
 
 //user: pyramesapp
@@ -91,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private LineGraphSeries<DataPoint> series2;
     private LineGraphSeries<DataPoint> series3;
     private LineGraphSeries<DataPoint> series4;
+
+    private GraphView graph1;
+    private GraphView graph2;
+    private GraphView graph3;
+    private GraphView graph4;
 
     int minX = 0; int maxX = 100;
     int yRange = 1500;
@@ -171,17 +176,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //Graphics
         //
         //
-        // upload button
-        Button buttonUpload = (Button) findViewById(R.id.buttonUpload);
-        buttonUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upload();
-            }
-        });
-        //
-        // TO DO: SHOW UPLOAD BUTTON ONLY WHEN "STOP" BUTTON SHOWS
-        //
 
         //
         // pop-up window
@@ -203,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         series4 = new LineGraphSeries<DataPoint>();
 
         //customize viewports
-        GraphView graph1 = (GraphView) findViewById(R.id.graph1);
+        graph1 = (GraphView) findViewById(R.id.graph1);
         graph1.addSeries(series1);
         viewport1 = graph1.getViewport();
         viewport1.setYAxisBoundsManual(true);
@@ -214,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         viewport1.setMinX(minX);
         viewport1.setMaxX(maxX);
 
-        GraphView graph2 = (GraphView) findViewById(R.id.graph2);
+        graph2 = (GraphView) findViewById(R.id.graph2);
         graph2.addSeries(series2);
         viewport2 = graph2.getViewport();
         viewport2.setYAxisBoundsManual(true);
@@ -226,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         viewport2.setMinX(minX);
         viewport2.setMaxX(maxX);
 
-        GraphView graph3 = (GraphView) findViewById(R.id.graph3);
+        graph3 = (GraphView) findViewById(R.id.graph3);
         graph3.addSeries(series3);
         viewport3 = graph3.getViewport();
         viewport3.setYAxisBoundsManual(true);
@@ -238,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         viewport3.setMinX(minX);
         viewport3.setMaxX(maxX);
 
-        GraphView graph4 = (GraphView) findViewById(R.id.graph4);
+        graph4 = (GraphView) findViewById(R.id.graph4);
         graph4.addSeries(series4);
         viewport4 = graph4.getViewport();
         viewport4.setYAxisBoundsManual(true);
@@ -322,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         isStreaming = false;
         startReading = false;
 
-        displayingGraphs = false;
+        //displayingGraphs = false;
 
         //
         // streams data if device is connected
@@ -387,13 +381,67 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 String btnText = (String) buttonStream.getText();
                 if (btnText.equals("Stream")) {
 
+                    startTime = DateFormat.getDateTimeInstance().format(new Date());
+                    bigString = "";
+                    bigStringIndex = 0;
+
+                    series1 = new LineGraphSeries<DataPoint>();
+                    series2 = new LineGraphSeries<DataPoint>();
+                    series3 = new LineGraphSeries<DataPoint>();
+                    series4 = new LineGraphSeries<DataPoint>();
+
+                    graph1.removeAllSeries();
+                    graph1.addSeries(series1);
+                    viewport1 = graph1.getViewport();
+                    viewport1.setYAxisBoundsManual(true);
+                    viewport1.setMinY(minY1);
+                    viewport1.setMaxY(maxY1);
+                    viewport1.setScrollable(true);
+                    viewport1.setXAxisBoundsManual(true);
+                    viewport1.setMinX(minX);
+                    viewport1.setMaxX(maxX);
+
+                    graph2.removeAllSeries();
+                    graph2.addSeries(series2);
+                    viewport2 = graph2.getViewport();
+                    viewport2.setYAxisBoundsManual(true);
+                    viewport2.setMinY(minY2);
+                    viewport2.setMaxY(maxY2);
+                    viewport2.setScrollable(true);
+                    viewport2.setScalable(true);
+                    viewport2.setXAxisBoundsManual(true);
+                    viewport2.setMinX(minX);
+                    viewport2.setMaxX(maxX);
+
+                    graph3.removeAllSeries();
+                    graph3.addSeries(series3);
+                    viewport3 = graph3.getViewport();
+                    viewport3.setYAxisBoundsManual(true);
+                    viewport3.setMinY(minY3);
+                    viewport3.setMaxY(maxY3);
+                    viewport3.setScrollable(true);
+                    viewport3.setScalable(true);
+                    viewport3.setXAxisBoundsManual(true);
+                    viewport3.setMinX(minX);
+                    viewport3.setMaxX(maxX);
+
+                    graph4.removeAllSeries();
+                    graph4.addSeries(series4);
+                    viewport4 = graph4.getViewport();
+                    viewport4.setYAxisBoundsManual(true);
+                    viewport4.setMinY(minY4);
+                    viewport4.setMaxY(maxY4);
+                    viewport4.setScrollable(true);
+                    viewport4.setScalable(true);
+                    viewport4.setXAxisBoundsManual(true);
+                    viewport4.setMinX(minX);
+                    viewport4.setMaxX(maxX);
+
                     //mConnectedThread.write("Y");
                     MainActivity.write("Y");
                     buttonStream.setText("Stop");
                     isStreaming = true;
-                    startTime = DateFormat.getDateTimeInstance().format(new Date());
-                    bigString = "";
-                    bigStringIndex = 0;
+
                     /*
                     try {
                         TimeUnit.MILLISECONDS.sleep(200);
@@ -407,6 +455,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     buttonStream.setText("Stream");
                     isStreaming = false;
                     startReading = false;
+                    upload();
                 }
             }
         });

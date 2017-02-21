@@ -75,12 +75,6 @@
                 android:text="Graphs"
                 android:background="#ffffb6c1"/>
 
-            <Button
-                android:id="@+id/buttonUpload"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Upload"/>
-
         </LinearLayout>
 
     </LinearLayout>
