@@ -65,7 +65,6 @@ import com.google.android.gms.drive.MetadataChangeSet;
 //import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 //import com.google.api.services.drive.Drive;
 
-
 //mark time stamp for start time                        //Done
 //wider range for graphing                              //Done
 //instructions to use app readme.                       //Incomplete
@@ -155,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     static TextView textViewBattery;
 
     static boolean displayingGraphs = false;
+
+    static boolean clickedButtonPopUp = false;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -358,6 +359,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } catch (IOException e2) {
                 //insert code to deal with this
             }
+        } catch (Exception e) {
+
         }
 
         InputStream tmpIn = null;
@@ -367,7 +370,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //Create I/O streams for connection
             tmpIn = btSocket.getInputStream();
             tmpOut = btSocket.getOutputStream();
-        } catch (IOException e) { }
+        } catch (IOException e) {
+
+        } catch (Exception e) {
+
+        }
 
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
@@ -463,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         new Thread(new Runnable() {
             byte[] buffer = new byte[256]; // 256, sleep 100: 2466 E / min.
             int bytes;
-            int vpYBuffer = 250;
+            int vpYBuffer = 100;
 
             @Override
             public void run() {
@@ -588,6 +595,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } catch (IOException e2) {
             System.out.println("Bluetooth Socket Didn't Close");
             //insert code to deal with this
+        } catch (Exception e) {
+
         }
     }
 
